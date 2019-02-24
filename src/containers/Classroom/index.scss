@@ -1,0 +1,213 @@
+@import url(https://fonts.googleapis.com/css?family=Muli:400);
+@import url(https://fonts.googleapis.com/css?family=Pacifico);
+@import url(https://fonts.googleapis.com/css?family=Ubuntu+Condensed);
+* {
+  font-family: Muli;
+}
+
+b {
+  font-family: "Ubuntu Condensed";
+  font-size: 0.9em;
+  background-color: #004d40;
+  color: #e0f2f1;
+  padding: 1px;
+  margin-right: 3px !important;
+}
+
+.cpage{
+  position: absolute;
+  top: 60px;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+.sidebar {
+  position: absolute;
+  top: 10px;
+  bottom: 0;
+  width: 350px;
+  background-color: #e0e0e0;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 10px;
+
+  .classroom_card {
+    position: relative;
+    p,h6, h2 {
+      margin: 0;
+    }
+    p {
+      margin-top: 7px !important;
+    }
+  }
+}
+.main {
+  position: absolute;
+  left: 350px;
+  top: 10px;
+  bottom: 0;
+  right: 0;
+  background-color: #e0e0e0;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: flex-start;
+}
+
+.batch {
+  width: 350px;
+  flex-shrink: 0;
+  height: 97%;
+  background-color: #37474f !important;
+  padding: 0 10px 0 15px;
+  position: relative;
+  overflow: scroll !important;
+  margin: 7px;
+  .batch_heading {
+    color: #cfd8dc;
+    display: flex;
+    align-items: baseline;
+    h3 {
+      flex-grow: 1;
+      font-family: Pacifico;
+    }
+    // * {
+    //   flex-shrink: 0;
+    //   width: 70px;
+    // }
+    // .days_left{
+    //   flex: 1 0 40px;
+    //   align-self: center!important
+    // }
+    .meta{
+      display: flex;
+      flex: 1 0 200px;
+    align-items: center;
+justify-content: space-around
+    }
+    .joinbatch{
+      display: none;
+      flex: 1 0 200px;
+    align-items: center;
+
+    }
+    &:hover{
+      .meta{
+        display: none
+      }
+      .joinbatch{
+        display: flex
+      } 
+    }
+  }
+}
+
+.lectures {
+  height: 60px;
+  width: 320px;
+  background-color: #fafafa;
+  margin-top: 7px;
+  .lecture_heading {
+    color: #212121;
+    display: flex;
+    align-items: baseline;
+    margin: 0 15px 0 15px;
+    h3 {
+      flex-grow: 1;
+      text-align: start;
+    }
+    * {
+      flex-shrink: 0;
+      width: 70px;
+      text-align: end;
+    }
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  border-radius: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-track:hover {
+  background: transparent;
+  display: block;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+  display: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
+  // display: block;
+}
+
+//CLASSROOMS
+
+.classrooms_card{
+  width:300px;
+  height:300px;
+  position: relative;
+  overflow:hidden;
+  &:hover{
+    .header_img{
+      filter: blur(8px)
+    }
+    .classroom_body{
+      top: 30px;
+      transition: top 300ms;
+      h2{
+        height: auto;
+        transition: height 300ms;
+      }
+    }
+    img{
+      transform: translate(195%,-50%) scale(0.5);
+      transition: transform 300ms;
+    }
+  }
+  img{
+      position: absolute;
+      top: 40px;
+      border-radius: 50%;
+      right: 55%;
+      width: 80px;
+      height: 80px;
+    }
+  .header_img{
+    // width:100%;
+  height:300px;
+  z-index: 1;
+  // background-color: red;
+  }
+  .classroom_body{
+    position: absolute;
+    padding: 7px;
+    z-index: 2;
+    top: 200px;
+    left: 0;
+    h2{
+      height: 75px;
+    }
+    h6{
+      background-color: rgba(0, 0, 0, 0.863);
+      color: white
+    }
+  }
+}

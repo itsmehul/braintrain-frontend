@@ -1,0 +1,56 @@
+// .grid-container {
+    
+//   }
+  
+//   .avatar_body { height: 212px; width:250px; padding: 1em}
+  
+//   .avatar_image { height: 140px; width: 250px; position: relative;}
+
+.avatar_card {
+  margin-top: 7px;
+  width: 200px;
+padding: 10px;
+position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    * {
+    margin: 0;
+  }
+  b {
+font-family: "Ubuntu Condensed";
+font-size: 0.9em;
+background-color: #424242;
+color: #e0f2f1;
+padding: 1px;
+margin-right: 3px !important;
+}
+  img{
+    position: relative;
+    border-radius: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 160px;
+    height: 160px;
+  }
+      h6,h2 {
+    margin-top: 7px !important;
+  }
+  .meta{
+    position: absolute;
+    opacity: 0;
+    z-index: 3;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    left: 50%;
+    background-color: #212121;
+    padding: 7px;
+    color: white;
+    width: 200px;
+  }
+  &:hover{
+    .meta{
+      opacity: 1!important;
+      transition: opacity 300ms;
+    }
+  }
+}
