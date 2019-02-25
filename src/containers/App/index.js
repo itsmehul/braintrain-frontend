@@ -23,7 +23,7 @@ import gql from 'graphql-tag'
 import {compose} from 'recompose'
 import { setUserData } from '../../actions'
 import {withApollo} from 'react-apollo'
-
+import LoadingBar from 'react-redux-loading-bar'
 const mapStateToProps = state => {
 	return {
 		snackState: state.myreducer.snackState,
@@ -50,9 +50,15 @@ class App extends React.Component {
 						email
 						teacherIn {
 							name
+							batches{
+								id
+							}
 						}
 						studentIn {
 							name
+							batches{
+								id
+							}
 						}
 					}
 				}
@@ -70,6 +76,7 @@ class App extends React.Component {
 					<Navigation />
 					{snackState.open === true && <ReduxSnackbar />}
 					<div className="main_body">
+					<LoadingBar/>
 						<Route
 							render={({ location }) => (
 								<TransitionGroup>

@@ -32,6 +32,7 @@ export const CLASSROOM_QUERY = gql`
 			batches {
 				id
 				name
+				description
 				startsFrom
 				lectures {
 					id
@@ -79,6 +80,7 @@ export const CLASSROOM_QUERY_LOGGEDIN = gql`
 			batches {
 				id
 				name
+				description
 				startsFrom
 				lectures {
 					id

@@ -29,6 +29,7 @@ const CreateClassroomForm = ({
 	touched,
 	isSubmitting,
 	submitForm,
+	edit,
 	status
 }) => {
 
@@ -75,7 +76,7 @@ const CreateClassroomForm = ({
 					onClick={() => {
 						submitForm()
 					}}>
-					{isSubmitting ? 'Submitting' : 'Submit'}
+					{edit ? 'EDIT LECTURE' : 'CREATE LECTURE'}
 				</Button>
 			</Form>
 		</React.Fragment>
@@ -141,7 +142,7 @@ export default compose(
 						setStatus({ success: true })
 						setGqlIds({ classroomId: response.data.createClassroom.id })
 						setSnackState({
-							message: 'Successfully created a classroom!',
+							message: 'Successfully created a lecture!',
 							variant: 'success',
 							open: true
 						})
@@ -167,7 +168,7 @@ export default compose(
 						setSubmitting(false)
 						setStatus({ success: true });
 						setSnackState({
-							message: 'Successfully created a classroom!',
+							message: 'Successfully created a lecture!',
 							variant: 'success',
 							open: true
 						})

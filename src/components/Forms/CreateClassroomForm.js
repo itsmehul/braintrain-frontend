@@ -38,7 +38,8 @@ const CreateClassroomForm = ({
 	submitForm,
 	status,
 	setFieldValue,
-	handleBlur
+	handleBlur,
+	edit
 }) => {
 
 	return (
@@ -108,7 +109,7 @@ const CreateClassroomForm = ({
 					onClick={() => {
 						submitForm()
 					}}>
-					{isSubmitting ? 'Submitting' : 'Submit'}
+					{edit ? 'EDIT CLASSROOM' : 'CREATE CLASSROOM'}
 				</Button>
 			</Form>
 		</React.Fragment>

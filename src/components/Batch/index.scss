@@ -1,0 +1,38 @@
+.batch {
+    width: 350px;
+    flex-shrink: 0;
+    height: 97%;
+    background-color: #37474f !important;
+    padding: 0 10px 0 15px;
+    position: relative;
+    overflow: scroll !important;
+    margin: 7px;
+    .batch_heading {
+      color: #cfd8dc;
+      display: flex;
+      align-items: baseline;
+      h3 {
+        flex-grow: 1;
+        font-family: Pacifico;
+      }
+      // * {
+      //   flex-shrink: 0;
+      //   width: 70px;
+      // }
+      // .days_left{
+      //   flex: 1 0 40px;
+      //   align-self: center!important
+      // }
+      .meta{
+        display: flex;
+        flex: 1 0 200px;
+      align-items: center;
+  justify-content: space-around
+      }
+      .joinbatch{
+        flex: 1 0 200px;
+      align-items: center;
+  
+      }
+    }
+  }

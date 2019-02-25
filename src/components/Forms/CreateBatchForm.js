@@ -27,7 +27,8 @@ const CreateBatchForm = ({
 	touched,
 	isSubmitting,
 	submitForm,
-	status
+	status,
+	edit
 }) => {
 
 	return (
@@ -72,7 +73,7 @@ const CreateBatchForm = ({
 					onClick={() => {
 						submitForm()
 					}}>
-					{isSubmitting ? 'Submitting' : 'Submit'}
+					{edit ? 'EDIT BATCH' : 'CREATE BATCH'}
 				</Button>
 			</Form>
 		</React.Fragment>

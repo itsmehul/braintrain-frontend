@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom';
 
 import { withFirebase } from '../../components/Firebase';
 import * as ROUTES from '../../constants/routes';
-import {  Button, Alert} from 'react-bootstrap'
+import { Alert} from 'react-bootstrap'
 
 import { FormGrid } from '../../components/Grids';
+import {Button, TextField } from '@material-ui/core';
 
 const PasswordForgetPage = () => (
 <FormGrid>
@@ -51,16 +52,18 @@ class PasswordForgetFormBase extends Component {
     const isInvalid = email === '';
 
     return (
-      <form onSubmit={this.onSubmit} style={{alignSelf:'center'}}>
-        {/* <FieldGroup
-          controlId="formBasicText"
+      <form onSubmit={this.onSubmit}>
+        <TextField
+						className="form_text_field"
           name="email"
+          label="Email"
           type="email"
+          variant="outlined"
           value={email}
           placeholder="Enter email address"
           onChange={this.onChange}
-        /> */}
-        <Button onClick={this.onSubmit} disabled={isInvalid} variant="info" block>Request Change</Button>
+        />
+        <Button onClick={this.onSubmit} disabled={isInvalid} variant="contained">Request Change</Button>
 
 {error && <Alert variant="warning">
   <strong>Error!</strong> {error.message}

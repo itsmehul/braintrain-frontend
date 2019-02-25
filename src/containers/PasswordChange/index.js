@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 
 import { withFirebase } from '../../components/Firebase';
 import zxcvbn from 'zxcvbn'
-import {ProgressBar, Button, Alert} from 'react-bootstrap'
+import {ProgressBar,Alert} from 'react-bootstrap'
+import { TextField, Button } from '@material-ui/core';
 
 const INITIAL_STATE = {
   passwordOne: '',
@@ -67,10 +68,11 @@ class PasswordChangeForm extends Component {
 
     return (
       <form onSubmit={this.onSubmit}>
-        {/* <FieldGroup
-          controlId="formBasicText"
+        <TextField
+						className="form_text_field"
           name="passwordOne"
           type="password"
+          variant="outlined"
           value={passwordOne}
           placeholder="Enter password"
           onChange={this.onChange}
@@ -81,16 +83,17 @@ class PasswordChangeForm extends Component {
               this.getValidationState('passwordOne').value_quality === 'danger' ? 45 :
                 this.getValidationState('passwordOne').value_quality === 'warning' ? 65 : 100
             } />}
-        <FieldGroup
-          controlId="formBasicText"
+        <TextField
+						className="form_text_field"
           name="passwordTwo"
           type="password"
+          variant="outlined"
           value={passwordTwo}
           placeholder="Enter the same password"
           onChange={this.onChange}
           label={this.getValidationState('passwordTwo').label}
-        /> */}
-        <Button onClick={this.onSubmit} disabled={isInvalid} variant="primary" block>Confirm new password</Button>
+        />
+        <Button onClick={this.onSubmit} disabled={isInvalid} variant="contained">Confirm new password</Button>
 
 {error && <Alert variant="warning">
   <strong>Error!</strong> {error.message}

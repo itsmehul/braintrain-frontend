@@ -165,7 +165,7 @@ const SignUpForm = ({
 				color="primary"
 				disabled={isSubmitting}
 				onClick={submitForm}>
-				{isSubmitting ? 'CREATING..' : 'CREATE'}
+				{edit ? 'EDIT PROFILE' : 'CREATE PROFILE'}
 			</Button>
 		</Form>
 	)

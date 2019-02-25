@@ -5,47 +5,40 @@ import { Button } from '@material-ui/core'
 import { AuthUserContext } from '../../components/Session'
 import Paper from '@material-ui/core/Paper'
 import Group from '@material-ui/icons/Group'
+import { connect } from "react-redux";
 
 import './index.scss'
 import ClassroomActions from '../../components/FloatingActionButton/ClassroomActions'
 import BatchAction from '../../components/FloatingActionButton/BatchAction'
 import AvatarCard from '../../components/Avatar'
-import { CLASSROOM_QUERY_LOGGEDIN, CLASSROOM_QUERY } from '../../gql/Queries';
-import LectureCard from '../../components/Lecture';
-import { formatDate } from '../../utils/time';
-import { JOIN_BATCH_MUTATION } from '../../gql/Mutations';
+import { CLASSROOM_QUERY_LOGGEDIN, CLASSROOM_QUERY } from '../../gql/Queries'
+import LectureCard from '../../components/Lecture'
+import { formatDate } from '../../utils/time'
+import { JOIN_BATCH_MUTATION } from '../../gql/Mutations'
 import { withRouter } from 'react-router-dom'
 import { withApollo } from 'react-apollo'
 import { compose } from 'recompose'
+import BatchCard from '../../components/Batch';
+import { showLoading, hideLoading, LoadingBar } from 'react-redux-loading-bar'
 
 
-function ClassroomDetails(props) {
-	const classid = props.match.params.id
-    function joinBatch(batchId, classroomId){
-        props.client
-        .mutate({
-            mutation: JOIN_BATCH_MUTATION,
-            variables: {
-				batchId,
-				classroomId
-            }
-        })
-        .then(response => {
-            console.log(response)
-        })
-        .catch(error => {
-            console.log(error)
-        })
-    }
+class ClassroomDetails extends React.Component{
+	componentWillMount = () => {
+		this.classId=this.props.match.params.id
+	}
+	
+	
+	render(){
+		console.log(this.props.showLoading())
 	return (
 		<div className="page" style={{ backgroundColor: '#e0e0e0' }}>
 			<AuthUserContext.Consumer>
 				{authUser => (
 					<Query
 						query={authUser ? CLASSROOM_QUERY_LOGGEDIN : CLASSROOM_QUERY}
-						variables={{ id:classid }}>
+						variables={{ id: this.classId }}>
 						{({ loading, error, data }) => {
-							if (loading) return 'Loading...'
+							if (loading) return 'Loading..'
 							if (error) return `Error! ${error.message}`
 							const {
 								id,
@@ -63,24 +56,22 @@ function ClassroomDetails(props) {
 								<React.Fragment>
 									<div className="sidebar">
 										<Paper className="classroom_card">
-											{myclass && (
-												<ClassroomActions classroomId={id} />
-											)}
-											<div style={{padding:'7px'}}>
+											{myclass && <ClassroomActions classroomId={id} />}
+											<div style={{ padding: '7px' }}>
 												<h2>{name}</h2>
 												<p>About</p>
 												<h6>{description}</h6>
-												
+
 												<p>Objectives</p>
 												<h6>{objectives}</h6>
-												
+
 												<p>Details</p>
-												
+
 												{/* <h6>
 													<b>LECTURES: </b>
 													{lecture_count} lectures
 												</h6>  */}
-												
+
 												<h6>
 													<b>LEARNING: </b>
 													{learning}
@@ -100,22 +91,15 @@ function ClassroomDetails(props) {
 									</div>
 									<div className="main">
 										{batches.map(batch => (
-											<Paper className="batch">
-												{myclass && <BatchAction batchId={batch.id} />}
-												<div className="batch_heading">
-													<h3>{batch.name}</h3>
-													<div className="meta">
-														<p>{batch.students&&batch.students.length}  <Group fontSize="small"/></p>
-														<p className="days_left">{formatDate(batch.startsFrom)}</p>
-													</div>
-													<div className="joinbatch">
-														<Button  onClick={()=>joinBatch(batch.id, id)} variant="contained">Join Batch</Button>
-													</div>
-												</div>
+											<BatchCard batch={batch} classroomId={id} myclass={myclass}>
 												{batch.lectures.map(lecture => (
-													<LectureCard lecture={lecture} batchId={batch.id} myclass={myclass}/>
+													<LectureCard
+														lecture={lecture}
+														batchId={batch.id}
+														myclass={myclass}
+													/>
 												))}
-											</Paper>
+											</BatchCard>
 										))}
 									</div>
 								</React.Fragment>
@@ -127,7 +111,19 @@ function ClassroomDetails(props) {
 		</div>
 	)
 }
-
+}
 ClassroomDetails.propTypes = {}
 
-export default compose(withApollo,withRouter)(ClassroomDetails)
+const mapDispatchToProps = dispatch=>({
+	showLoading: ()=>dispatch(showLoading()),
+	hideLoading: ()=>dispatch(hideLoading())
+})
+
+export default compose(
+	withApollo,
+	withRouter,
+	connect(
+		null,
+		mapDispatchToProps
+	)
+)(ClassroomDetails)
