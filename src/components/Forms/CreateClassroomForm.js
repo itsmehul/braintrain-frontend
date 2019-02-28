@@ -41,7 +41,6 @@ const CreateClassroomForm = ({
 	handleBlur,
 	edit
 }) => {
-
 	return (
 		<React.Fragment>
 			<Form>
@@ -93,15 +92,15 @@ const CreateClassroomForm = ({
 					component={TextField}
 					variant="outlined"
 				/>
-					<Field
-						name="file"
-						component={CustomImageInput}
-						title="Select a file"
-						setFieldValue={setFieldValue}
-						errorMessage={errors['file'] ? errors['file'] : undefined}
-						touched={touched['file']}
-						onBlur={handleBlur}
-					/>
+				<Field
+					name="file"
+					component={CustomImageInput}
+					title="Select a file"
+					setFieldValue={setFieldValue}
+					errorMessage={errors['file'] ? errors['file'] : undefined}
+					touched={touched['file']}
+					onBlur={handleBlur}
+				/>
 				<Button
 					color="primary"
 					variant="contained"
@@ -135,7 +134,6 @@ export default compose(
 			requirements,
 			objectives,
 			file
-
 		}) {
 			return {
 				name: name || '',
@@ -144,33 +142,43 @@ export default compose(
 				language: language || '',
 				requirements: requirements || '',
 				objectives: objectives || '',
-				file: file || undefined,
-
+				file: file || undefined
 			}
 		},
 		validationSchema: Yup.object().shape({
-			// name: Yup.string()
-			// 	.name('name not valid')
-			// 	.required('name is required'),
-		}),
+			name: Yup.string().max(50,`Don't exceed more than 50 characters`),
+			description: Yup.string().max(555,`Don't exceed more than 555 characters`),
+			learning: Yup.string(),
+			language: Yup.string(),
+			requirements: Yup.string(),
+			objectives: Yup.string(),
+		})
+		,
 		handleSubmit: async (
 			values,
 			{ resetForm, setErrors, setSubmitting, setStatus, props }
-		) =>{
+		) => {
 			const { setGqlIds, setSnackState, edit } = props
-			let formData = new FormData()
-			formData.append('file', values.file)
-			formData.append('upload_preset', 'elny2udg')
-			const cloudinaryData = await axios.post(
-				`https://api.cloudinary.com/v1_1/mrgawde/upload`,
-				formData
-			)
-			const classroomImage = cloudinaryData.data.url
-
-			const valuesToEdit = Object.entries(values).filter(val=>val[1]!=='').reduce((accum, [k, v]) => {
-				accum[k] = v;
-				return accum;
-			  }, {});
+			let classroomImage = ''
+			try {
+				let formData = new FormData()
+				formData.append('file', values.file)
+				formData.append('upload_preset', 'elny2udg')
+				const cloudinaryData = await axios.post(
+					`https://api.cloudinary.com/v1_1/mrgawde/upload`,
+					formData
+				)
+				classroomImage = cloudinaryData.data.url
+			} catch (error) {
+				console.log(error)
+			}
+			values = { classroomImage, ...values }
+			const valuesToEdit = Object.entries(values)
+				.filter(val => val[1] !== '' && typeof (val[1] !== 'undefined'))
+				.reduce((accum, [k, v]) => {
+					accum[k] = v
+					return accum
+				}, {})
 			if (edit) {
 				props.client
 					.mutate({
@@ -178,7 +186,7 @@ export default compose(
 						variables: {
 							...valuesToEdit,
 							classroomImage,
-							classroomId:props.classroomId
+							classroomId: props.classroomId
 						}
 					})
 					.then(response => {
@@ -200,7 +208,8 @@ export default compose(
 					.mutate({
 						mutation: CREATE_CLASSROOM_MUTATION,
 						variables: {
-							...values
+							...values,
+							classroomImage
 						}
 					})
 					.then(response => {

@@ -1,10 +1,8 @@
 import React from 'react'
 import './index.scss'
-import LectureAction from '../FloatingActionButton/LectureAction'
 import { getDaysLeft, formatDate } from '../../utils/time'
 import Group from '@material-ui/icons/Group'
 import { Button } from '@material-ui/core'
-import * as ROUTES from '../../constants/routes'
 import { withRouter } from 'react-router-dom'
 import { withApollo } from 'react-apollo'
 import { compose } from 'recompose'
@@ -12,6 +10,8 @@ import { JOIN_BATCH_MUTATION } from '../../gql/Mutations'
 import Paper from '@material-ui/core/Paper'
 import BatchAction from '../../components/FloatingActionButton/BatchAction'
 import { connect } from 'react-redux'
+import { AuthUserContext } from '../../components/Session'
+import LectureAction from '../FloatingActionButton/LectureAction';
 
 const BatchCard = ({
 	batch,
@@ -23,17 +23,13 @@ const BatchCard = ({
 	user
 }) => {
 	const [isMember, setIsMember] = React.useState(false)
-	const studentIn = user.studentIn
-	React.useEffect(
-		() =>
-			setIsMember(
-				studentIn
-					.reduce((a, c) => a.batches.concat(c.batches))
-					.some(b => b.id === batch.id)
-			),
-		[isMember]
-	)
-	console.log(isMember)
+	if (user !== null && user.studentIn && user.studentIn.length !== 0) {
+		React.useEffect(()=>{setIsMember(
+			user.studentIn
+				.reduce((a, c) => a.batches.concat(c.batches))
+				.some(b => b.id === batch.id)
+		)})
+	}
 	async function joinBatch(batchId, classroomId) {
 		try {
 			// let request = new PaymentRequest(methods, details, options)
@@ -49,12 +45,14 @@ const BatchCard = ({
 			console.log(error)
 		}
 	}
+	
 	return (
 		<Paper className="batch">
-			{myclass && <BatchAction batchId={batch.id} />}
+			{myclass && <BatchAction create={false} batchId={batch.id} />}
+			{myclass && <LectureAction create={true} batchId={batch.id} classroomId={classroomId}/>}
 			<div className="batch_heading">
 				<h3>{batch.name}</h3>
-				{isMember ? (
+				{isMember || myclass ? (
 					<div className="meta">
 						<p>
 							{batch.students && batch.students.length}{' '}
@@ -63,21 +61,27 @@ const BatchCard = ({
 						<p className="days_left">{formatDate(batch.startsFrom)}</p>
 					</div>
 				) : (
-					<div className="joinbatch">
-						<Button
-							onClick={() => joinBatch(batch.id, classroomId)}
-							variant="contained">
-							Join Batch
-						</Button>
-					</div>
+					<AuthUserContext.Consumer>
+						{authUser =>
+							authUser ? (
+								<div className="joinbatch">
+									<Button
+										onClick={() => joinBatch(batch.id, classroomId)}
+										variant="contained">
+										Join Batch
+									</Button>
+								</div>
+							) : null
+						}
+					</AuthUserContext.Consumer>
 				)}
 			</div>
-			{isMember ? (
+			{isMember || myclass ? (
 				children
 			) : (
 				<Paper style={{ padding: '1em' }}>
-                <h4 style={{margin:'0px'}}>Description:</h4>
-					<h5 style={{margin:'10px 0 0 0'}}>{batch.description}</h5>
+					<h4 style={{ margin: '0px' }}>Description:</h4>
+					<h5 style={{ margin: '10px 0 0 0' }}>{batch.description}</h5>
 				</Paper>
 			)}
 		</Paper>

@@ -7,14 +7,13 @@ import { loadingBarMiddleware } from 'react-redux-loading-bar'
 
 const rootReducer = combineReducers({
 	simplewebrtc: reducer,
-	myreducer,
-	loadingBar: loadingBarReducer
+	myreducer
 })
 
 // const store = createStoreTest()
 const store = createStore(
 	rootReducer,
 	{},
-	compose(applyMiddleware(thunk, loadingBarMiddleware()))
+	compose(applyMiddleware(thunk))
 )
 export default store

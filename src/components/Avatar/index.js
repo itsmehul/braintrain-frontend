@@ -5,13 +5,13 @@ import { formatDate } from '../../utils/time';
 
 export default function AvatarCard({ user }) {
   const { createdAt, name, role, profession, dpUrl, email, description, teacherIn, studentIn } = user
-  console.log(dpUrl)
+  console.log(user)
 	return (
 		<Paper className="avatar_card">
 			<h6>
 					{role}
 				</h6>
-			<img src={(dpUrl)?dpUrl:"http://pravatar.cc/300"}  />
+			<img src={(dpUrl)?dpUrl:"/assets/avatar-img.png"}  />
 			<h2>{name}</h2>
 			<h6 className="about">{description}<br/>User since {formatDate(createdAt)}</h6>
 			<div className="meta">

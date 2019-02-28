@@ -38,11 +38,11 @@ export const CLASSROOM_QUERY = gql`
 					id
 					name
 					liveAt
-					students{
-					name
+					students {
+						name
+					}
 				}
-				}
-				students{
+				students {
 					name
 				}
 			}
@@ -50,12 +50,13 @@ export const CLASSROOM_QUERY = gql`
 				name
 			}
 			teacher {
+				createdAt
 				name
-				email
-				description
-				profession
 				role
+				profession
+				description
 				dpUrl
+				email
 				teacherIn {
 					name
 				}
@@ -85,12 +86,12 @@ export const CLASSROOM_QUERY_LOGGEDIN = gql`
 				lectures {
 					id
 					name
-					students{
-					name
+					students {
+						name
+					}
+					liveAt
 				}
-				liveAt
-				}
-				students{
+				students {
 					name
 				}
 			}
@@ -98,12 +99,13 @@ export const CLASSROOM_QUERY_LOGGEDIN = gql`
 				name
 			}
 			teacher {
+				createdAt
 				name
-				email
-				description
 				role
 				profession
+				description
 				dpUrl
+				email
 				teacherIn {
 					name
 				}
@@ -117,21 +119,21 @@ export const CLASSROOM_QUERY_LOGGEDIN = gql`
 `
 
 export const USER_QUERY = gql`
-    query UserQuery {
-											myprofile {
-                        createdAt
-												name
-												role
-                        profession
-                        description
-                        dpUrl 
-                        email
-                        teacherIn{
-                          name
-                        }
-                        studentIn{
-                          name
-                        }
-											}
-										}
-  `;
+	query UserQuery {
+		myprofile {
+			createdAt
+			name
+			role
+			profession
+			description
+			dpUrl
+			email
+			teacherIn {
+				name
+			}
+			studentIn {
+				name
+			}
+		}
+	}
+`

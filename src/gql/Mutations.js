@@ -183,9 +183,6 @@ export const LOGIN_MUTATION = gql`
 mutation LoginMutation($email: String!, $fid: String!) {
 	login(email: $email, fid: $fid) {
 		token
-		user{
-			role
-		}
 	}
 }
 `

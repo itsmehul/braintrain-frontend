@@ -124,16 +124,20 @@ b {
       filter: blur(8px)
     }
     .classroom_body{
-      top: 30px;
+      top: 0px;
       transition: top 300ms;
       h2{
         height: auto;
         transition: height 300ms;
+        margin: 7px!important;
+      }
+      h6{
+        opacity: 1;
       }
     }
     img{
-      transform: translate(195%,-50%) scale(0.5);
-      transition: transform 300ms;
+      transform: translate(230%,-50%) scale(0);
+      transition: transform 600ms;
     }
   }
   img{
@@ -154,12 +158,13 @@ b {
     position: absolute;
     padding: 7px;
     z-index: 2;
-    top: 200px;
+    top: 170px;
     left: 0;
     h2{
-      height: 75px;
+      height: auto;
     }
     h6{
+      opacity: 0;
       background-color: rgba(0, 0, 0, 0.863);
       color: white
     }

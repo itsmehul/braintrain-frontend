@@ -34,13 +34,11 @@ const mapStateToProps = state => {
 };
 
 const _confirm = async ({ data }, props) => {
-	const { token, user:{role} } = data.login
-	_saveUserData(token, role)
+	const { token } = data.login
+	_saveUserData(token)
 }
 const _saveUserData = (token,role) => {
 	localStorage.setItem(AUTH_TOKEN, token)
-	localStorage.setItem(ROLE, role)
-
 }
 
 const SignInForm = ({ values, errors, touched, isSubmitting, submitForm }) => {

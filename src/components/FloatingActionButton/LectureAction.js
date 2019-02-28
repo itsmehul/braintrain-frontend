@@ -13,6 +13,8 @@ import { withApollo } from 'react-apollo'
 import { compose } from 'recompose'
 import { withRouter } from 'react-router-dom'
 import * as ROUTES from '../../constants/routes'
+import { Button } from '@material-ui/core';
+import './Styles.scss'
 
 const mapDispatchToProps = dispatch => {
 	return {
@@ -27,7 +29,7 @@ const styles = theme => ({
 	fab: {
 		margin: '4px!important',
 		height: '30px',
-		width: '30px',
+		width: '30px'
 	}
 })
 
@@ -54,25 +56,57 @@ function LectureActions(props) {
 				console.log(error)
 			})
 	}
+	console.log(props.batchId)
+	console.log(props.classroomId)
 	const { classes } = props
+	if (props.create)
+		return (
+			<React.Fragment>
+				<Button
+					variant="contained"
+					style={{ margin: '1em' }}
+					onClick={() => {
+						setOpenLecture(true)
+						props.setDialog({ open: true })
+					}}
+					color="secondary">
+					CREATE LECTURE
+				</Button>
+				{openLecture && (
+					<SimpleDialog close={() => setOpenLecture(false)}>
+						<CreateLectureForm
+							classroomId={props.classroomId}
+							batchId={props.batchId}
+							edit={false}
+						/>
+					</SimpleDialog>
+				)}
+			</React.Fragment>
+		)
 	return (
-		<div style={{ position: 'absolute', right: 0, zIndex: 5, backgroundColor:'#263238', borderBottomLeftRadius:'25px' }}>
+		<div
+			className="floatContainer">
 			<Fab
-				onClick={() => {setOpenLecture(true);props.setDialog({ open: true })}}
+				onClick={() => {
+					setOpenLecture(true)
+					props.setDialog({ open: true })
+				}}
 				color="secondary"
 				aria-label="Edit"
 				className={classes.fab}>
-				<EditIcon fontSize="small"/>
+				<EditIcon fontSize="small" />
 			</Fab>
 			<Fab
 				onClick={() => deleteLecture()}
 				aria-label="Delete"
 				className={classes.fab}>
-				<DeleteIcon fontSize="small"/>
+				<DeleteIcon fontSize="small" />
 			</Fab>
-			{openLecture&&<SimpleDialog close={()=>setOpenLecture(false)}>
-				<CreateLectureForm lectureId={props.lectureId} edit={true} />
-			</SimpleDialog>}
+			{openLecture && (
+				<SimpleDialog close={() => setOpenLecture(false)}>
+					<CreateLectureForm lectureId={props.lectureId} edit={true} />
+				</SimpleDialog>
+			)}
 		</div>
 	)
 }
@@ -88,6 +122,5 @@ export default compose(
 	),
 	withStyles(styles),
 	withApollo,
-	withRouter,
-
+	withRouter
 )(LectureActions)

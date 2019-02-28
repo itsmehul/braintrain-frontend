@@ -25,7 +25,7 @@ function SimpleDialog(props) {
 	return (
 		<Dialog
 			fullScreen={fullScreen}
-			onClose={handleClose}
+			// onClose={handleClose}
 			aria-labelledby="simple-dialog-title"
 			open={dialogState.open}
 			{...other}

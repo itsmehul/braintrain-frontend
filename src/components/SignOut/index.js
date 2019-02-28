@@ -10,7 +10,7 @@ import {withRouter} from 'react-router'
 import * as ROUTES from '../../constants/routes'
 
 const SignOutButton = ({ firebase, history }) => (
-  <Button color="secondary"  onClick={()=>{firebase.doSignOut();localStorage.removeItem(AUTH_TOKEN)
+  <Button color="secondary"  onClick={()=>{firebase.doSignOut();localStorage.removeItem(AUTH_TOKEN);history.push(ROUTES.LANDING)
     }} >
     Sign Out
   </Button>

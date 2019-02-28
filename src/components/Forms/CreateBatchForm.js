@@ -100,23 +100,25 @@ export default compose(
 			}
 		},
 		validationSchema: Yup.object().shape({
-			// name: Yup.string()
-			// 	.name('name not valid')
-			// 	.required('name is required'),
+			name: Yup.string().max(24,`Don't exceed more than 24 characters`),
+			description: Yup.string().max(150,`Don't exceed more than 150 characters`),
+			startsFrom: Yup.date().min(new Date()),
+			fee: Yup.string(),
 		}),
 		handleSubmit(
 			values,
 			{ resetForm, setErrors, setSubmitting, setStatus, props }
 		) {
 			const { setGqlIds, gqlIds, edit, batchId } = props
-			const classroomId = gqlIds.classroomId
-			console.log(gqlIds)
+			const classroomId = props.classroomId?props.classroomId:gqlIds.classroomId
 			const valuesToEdit = Object.entries(values)
 				.filter(val => val[1] !== '')
 				.reduce((accum, [k, v]) => {
 					accum[k] = v
 					return accum
 				}, {})
+			console.log(values)
+
 			if (edit) {
 				props.client
 					.mutate({
@@ -154,9 +156,18 @@ export default compose(
 						setSubmitting(false)
 						setStatus({ success: true })
 						setGqlIds({ batchId: response.data.createBatch.id })
+						setSnackState({
+							message: 'Successfully created a batch!',
+							variant: 'success',
+							open: true
+						})
 					})
 					.catch(error => {
-						setErrors({ name: error.message })
+						setSnackState({
+							message: `${error}`,
+							variant: 'error',
+							open: true
+						})
 					})
 			}
 

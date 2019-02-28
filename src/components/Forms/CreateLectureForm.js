@@ -23,7 +23,7 @@ const mapStateToProps = state => {
 	return { gqlIds: state.myreducer.gqlIds }
 }
 
-const CreateClassroomForm = ({
+const CreateLectureForm = ({
 	values,
 	errors,
 	touched,
@@ -83,7 +83,7 @@ const CreateClassroomForm = ({
 	)
 }
 
-CreateClassroomForm.propTypes = {}
+CreateLectureForm.propTypes = {}
 
 export default compose(
 	withRouter,
@@ -122,7 +122,8 @@ export default compose(
 				
 			} = values
 			const {setSnackState, gqlIds, edit} = props						
-			const {batchId,classroomId} = gqlIds
+			const batchId = props.batchId?props.batchId:gqlIds
+			const classroomId = props.classroomId?props.classroomId:gqlIds
 			const valuesToEdit = Object.entries(values).filter(val=>val[1]!=='').reduce((accum, [k, v]) => {
 				accum[k] = v;
 				return accum;
@@ -182,4 +183,4 @@ export default compose(
 			setSubmitting(false)
 		}
 	})
-)(CreateClassroomForm)
+)(CreateLectureForm)

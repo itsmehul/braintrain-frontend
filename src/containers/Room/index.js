@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom'
 import { withApollo } from 'react-apollo'
 import { compose } from 'recompose'
 import {
-  Provider,
+  Provider as SWCProvider,
   Connected,
   Connecting,
   Disconnected,
@@ -38,14 +38,20 @@ import {
   StyledChatListContainer
 } from './Styles';
 import './Styles.scss'
+import { Provider } from 'react-redux'
+import { createStore } from '@andyet/simplewebrtc'
 
-const StudyRoom = (props) => {
+const store = createStore();
+
+const StudyRoom = ({userData}) => {
   const configUrl = 'https://api.simplewebrtc.com/config/guest/ebb1205dee1adc62fa59437d'
-  const roomName=props.match.params.id
+  // const roomName=props.match.params.id
+  const roomName='mehulroxxx'
   const roomPassword=''
-  console.log(props)
   return(
-    <Provider configUrl={configUrl}>
+    <Provider store={store}>
+
+    <SWCProvider configUrl={configUrl} userData={userData}>
     {/*
        The <RemoteAudioPlayer/> plays all remote audio, muting as needed
        to reflect if the peer muted themselves, or you've muted them locally.
@@ -237,6 +243,7 @@ const StudyRoom = (props) => {
         }}
       </Room>
     </Connected>
+  </SWCProvider>
   </Provider>
 );
 }

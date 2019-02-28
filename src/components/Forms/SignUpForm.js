@@ -222,6 +222,8 @@ export default compose(
 			{ resetForm, setErrors, setSubmitting, setStatus, props }
 		) => {
 			const { email, password } = values
+			let dpUrl=''
+			try{
 			let formData = new FormData()
 			formData.append('file', values.file)
 			formData.append('upload_preset', 'elny2udg')
@@ -229,9 +231,12 @@ export default compose(
 				`https://api.cloudinary.com/v1_1/mrgawde/upload`,
 				formData
 			)
-			const dpUrl = cloudinaryData.data.url
+			dpUrl = cloudinaryData.data.url}catch(error){
+				console.log(error)
+			}
+			values = {dpUrl,...values}
 			const valuesToEdit = Object.entries(values)
-				.filter(val => val[1] !== '' || typeof (val[1] !== 'undefined'))
+				.filter(val => val[1] !== '' && typeof (val[1] !== 'undefined'))
 				.reduce((accum, [k, v]) => {
 					accum[k] = v
 					return accum
@@ -240,7 +245,7 @@ export default compose(
 				try {
 					await props.client.mutate({
 						mutation: EDIT_USER_MUTATION,
-						variables: { ...valuesToEdit, dpUrl }
+						variables: { ...valuesToEdit }
 					})
 					resetForm()
 					setSubmitting(false)
@@ -267,7 +272,7 @@ export default compose(
 
 					const response = await props.client.mutate({
 						mutation: SIGNUP_MUTATION,
-						variables: { name, fid: uid, email, dpUrl }
+						variables: { name, fid: uid, email, ...valuesToEdit }
 					})
 					_confirm(response, props)
 					resetForm()

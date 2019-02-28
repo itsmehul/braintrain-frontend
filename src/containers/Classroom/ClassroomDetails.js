@@ -1,25 +1,21 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Query } from 'react-apollo'
-import { Button } from '@material-ui/core'
 import { AuthUserContext } from '../../components/Session'
 import Paper from '@material-ui/core/Paper'
-import Group from '@material-ui/icons/Group'
 import { connect } from "react-redux";
 
 import './index.scss'
 import ClassroomActions from '../../components/FloatingActionButton/ClassroomActions'
-import BatchAction from '../../components/FloatingActionButton/BatchAction'
 import AvatarCard from '../../components/Avatar'
 import { CLASSROOM_QUERY_LOGGEDIN, CLASSROOM_QUERY } from '../../gql/Queries'
 import LectureCard from '../../components/Lecture'
-import { formatDate } from '../../utils/time'
-import { JOIN_BATCH_MUTATION } from '../../gql/Mutations'
 import { withRouter } from 'react-router-dom'
 import { withApollo } from 'react-apollo'
 import { compose } from 'recompose'
 import BatchCard from '../../components/Batch';
-import { showLoading, hideLoading, LoadingBar } from 'react-redux-loading-bar'
+import LoadingBar from '../../components/ProgressIndicators/LoadingBar';
+import BatchAction from '../../components/FloatingActionButton/BatchAction';
 
 
 class ClassroomDetails extends React.Component{
@@ -29,7 +25,6 @@ class ClassroomDetails extends React.Component{
 	
 	
 	render(){
-		console.log(this.props.showLoading())
 	return (
 		<div className="page" style={{ backgroundColor: '#e0e0e0' }}>
 			<AuthUserContext.Consumer>
@@ -38,7 +33,7 @@ class ClassroomDetails extends React.Component{
 						query={authUser ? CLASSROOM_QUERY_LOGGEDIN : CLASSROOM_QUERY}
 						variables={{ id: this.classId }}>
 						{({ loading, error, data }) => {
-							if (loading) return 'Loading..'
+							if (loading) return <LoadingBar/>
 							if (error) return `Error! ${error.message}`
 							const {
 								id,
@@ -87,7 +82,7 @@ class ClassroomDetails extends React.Component{
 											</div>
 										</Paper>
 
-										<AvatarCard user={teacher} />
+										{myclass?(<div style={{position:"relative", display:"flex", justifyContent:"center", marginTop:"7px"}}><BatchAction classroomId={id} create={true} /></div>):(<AvatarCard user={teacher} />)}
 									</div>
 									<div className="main">
 										{batches.map(batch => (
@@ -114,16 +109,7 @@ class ClassroomDetails extends React.Component{
 }
 ClassroomDetails.propTypes = {}
 
-const mapDispatchToProps = dispatch=>({
-	showLoading: ()=>dispatch(showLoading()),
-	hideLoading: ()=>dispatch(hideLoading())
-})
-
 export default compose(
 	withApollo,
 	withRouter,
-	connect(
-		null,
-		mapDispatchToProps
-	)
 )(ClassroomDetails)

@@ -1,18 +1,12 @@
-import React, { Component } from 'react'
+import React from 'react'
 import './index.scss'
 import { withApollo, Query } from 'react-apollo'
-import { withRouter } from 'react-router-dom'
-import { compose } from 'recompose'
 import ClassroomCreationStepper from '../../components/Stepper/ClassroomCreation'
 import SimpleDialog from '../../components/Dialog'
 import { connect } from 'react-redux'
 import { Button } from '@material-ui/core'
 import { setSnackState, setDialog } from '../../actions'
-import gql from 'graphql-tag'
 import AvatarCard from '../../components/Avatar'
-import { ReduxSnackbar } from '../../components/Snackbar/ReduxSnackbar'
-import CreateClassroomForm from '../../components/Forms/CreateClassroomForm'
-import { USER_QUERY } from '../../gql/Queries'
 
 const mapDispatchToProps = dispatch => {
 	return {
@@ -30,7 +24,6 @@ export const Profile = connect(
 )(
 	withApollo(props => {
     const user = {...props.user}
-    console.log(user)
 		return (
 			<div className="page">
 				<div className="grid-container">

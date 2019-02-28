@@ -13,6 +13,7 @@ import { withApollo } from 'react-apollo'
 import { compose } from 'recompose'
 import { withRouter } from 'react-router-dom'
 import * as ROUTES from '../../constants/routes'
+import { Button } from '@material-ui/core';
 
 const mapDispatchToProps = dispatch => {
 	return {
@@ -55,8 +56,18 @@ function ClassroomActions(props) {
 			})
 	}
 	const { classes } = props
+	if(props.create) return(<React.Fragment><Button
+		variant="contained"
+		style={{margin:"1em"}}
+		onClick={() => {setOpenClassroom(true);props.setDialog({ open: true })}}
+			color="secondary">
+			CREATE CLASSROOM
+		</Button>
+		{openClassroom&&<SimpleDialog close={()=>setOpenClassroom(false)}>		
+		<CreateClassroomForm classroomId={props.classroomId} edit={false} />
+				</SimpleDialog>}</React.Fragment>)
 	return (
-		<div style={{ position: 'absolute', right: 0, zIndex: 5, backgroundColor:'#263238' , borderBottomLeftRadius:'25px' }}>
+		<div style={{ position: 'absolute', right: 0, zIndex: 5}}>
 			<Fab
 				onClick={() => {setOpenClassroom(true);props.setDialog({ open: true })}}
 				color="secondary"
