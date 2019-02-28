@@ -12,6 +12,8 @@ import BatchAction from '../../components/FloatingActionButton/BatchAction'
 import { connect } from 'react-redux'
 import { AuthUserContext } from '../../components/Session'
 import LectureAction from '../FloatingActionButton/LectureAction';
+import { reflectAll } from 'async';
+import { USER_QUERY } from '../../gql/Queries';
 
 const BatchCard = ({
 	batch,
@@ -23,11 +25,11 @@ const BatchCard = ({
 	user
 }) => {
 	const [isMember, setIsMember] = React.useState(false)
-	if (user !== null && user.studentIn && user.studentIn.length !== 0) {
+	if (user !== null) {
+		
 		React.useEffect(()=>{setIsMember(
-			user.studentIn
-				.reduce((a, c) => a.batches.concat(c.batches))
-				.some(b => b.id === batch.id)
+			batch
+			.students.some(a=>a.id===user.id)
 		)})
 	}
 	async function joinBatch(batchId, classroomId) {
@@ -38,7 +40,11 @@ const BatchCard = ({
 
 			const response = await client.mutate({
 				mutation: JOIN_BATCH_MUTATION,
-				variables: { batchId, classroomId }
+				variables: { batchId, classroomId },
+				refetchQueries: [{
+					query: USER_QUERY,
+					variables: { repoFullName: 'apollographql/apollo-client' },
+				  }],
 			})
 			setIsMember(true)
 		} catch (error) {

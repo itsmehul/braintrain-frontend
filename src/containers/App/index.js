@@ -43,6 +43,7 @@ class App extends React.Component {
 			query: gql`
 				{
 					myprofile {
+						id
 						createdAt
 						name
 						role

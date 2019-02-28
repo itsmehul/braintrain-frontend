@@ -43,10 +43,9 @@ import { createStore } from '@andyet/simplewebrtc'
 
 const store = createStore();
 
-const StudyRoom = ({userData}) => {
+const StudyRoom = ({userData,match}) => {
   const configUrl = 'https://api.simplewebrtc.com/config/guest/ebb1205dee1adc62fa59437d'
-  // const roomName=props.match.params.id
-  const roomName='mehulroxxx'
+  const roomName=match.params.id
   const roomPassword=''
   return(
     <Provider store={store}>
