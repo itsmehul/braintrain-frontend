@@ -19,6 +19,7 @@ import {
 } from '../../gql/Mutations'
 import CustomImageInput from '../CustomImageInput/CustomImageInput'
 import axios from 'axios'
+import { cloneDeep } from 'apollo-utilities';
 
 const mapDispatchToProps = dispatch => {
 	return {
@@ -39,6 +40,7 @@ const CreateClassroomForm = ({
 	status,
 	setFieldValue,
 	handleBlur,
+	dataToEdit,
 	edit
 }) => {
 	return (
@@ -50,7 +52,8 @@ const CreateClassroomForm = ({
 					name="name"
 					label="Name"
 					component={TextField}
-					variant="outlined"
+					variant="filled"
+					multiline
 				/>
 				<Field
 					className="form_text_field"
@@ -58,7 +61,8 @@ const CreateClassroomForm = ({
 					name="description"
 					label="description"
 					component={TextField}
-					variant="outlined"
+					variant="filled"
+					multiline
 				/>
 				<Field
 					className="form_text_field"
@@ -66,7 +70,8 @@ const CreateClassroomForm = ({
 					name="learning"
 					label="learning"
 					component={TextField}
-					variant="outlined"
+					variant="filled"
+					multiline
 				/>
 				<Field
 					className="form_text_field"
@@ -74,7 +79,8 @@ const CreateClassroomForm = ({
 					name="language"
 					label="language"
 					component={TextField}
-					variant="outlined"
+					variant="filled"
+					multiline
 				/>
 				<Field
 					className="form_text_field"
@@ -82,7 +88,8 @@ const CreateClassroomForm = ({
 					name="requirements"
 					label="requirements"
 					component={TextField}
-					variant="outlined"
+					variant="filled"
+					multiline
 				/>
 				<Field
 					className="form_text_field"
@@ -90,7 +97,8 @@ const CreateClassroomForm = ({
 					name="objectives"
 					label="objectives"
 					component={TextField}
-					variant="outlined"
+					variant="filled"
+					multiline
 				/>
 				<Field
 					name="file"
@@ -133,33 +141,37 @@ export default compose(
 			language,
 			requirements,
 			objectives,
-			file
+			file,
+			dataToEdit
 		}) {
 			return {
-				name: name || '',
-				description: description || '',
-				learning: learning || '',
-				language: language || '',
-				requirements: requirements || '',
-				objectives: objectives || '',
+				name: name || dataToEdit?dataToEdit.name:'',
+				description: description || dataToEdit?dataToEdit.description:'',
+				learning: learning || dataToEdit?dataToEdit.learning:'',
+				language: language || dataToEdit?dataToEdit.language:'',
+				requirements: requirements || dataToEdit?dataToEdit.requirements:'',
+				objectives: objectives || dataToEdit?dataToEdit.objectives:'',
 				file: file || undefined
 			}
 		},
 		validationSchema: Yup.object().shape({
-			name: Yup.string().max(50,`Don't exceed more than 50 characters`),
-			description: Yup.string().max(555,`Don't exceed more than 555 characters`),
+			name: Yup.string().max(50, `Don't exceed more than 50 characters`),
+			description: Yup.string().max(
+				555,
+				`Don't exceed more than 555 characters`
+			),
 			learning: Yup.string(),
 			language: Yup.string(),
 			requirements: Yup.string(),
-			objectives: Yup.string(),
-		})
-		,
+			objectives: Yup.string()
+		}),
 		handleSubmit: async (
 			values,
 			{ resetForm, setErrors, setSubmitting, setStatus, props }
 		) => {
 			const { setGqlIds, setSnackState, edit } = props
 			let classroomImage = ''
+			if (typeof(file)!=='undefined'){
 			try {
 				let formData = new FormData()
 				formData.append('file', values.file)
@@ -171,7 +183,7 @@ export default compose(
 				classroomImage = cloudinaryData.data.url
 			} catch (error) {
 				console.log(error)
-			}
+			}}
 			values = { classroomImage, ...values }
 			const valuesToEdit = Object.entries(values)
 				.filter(val => val[1] !== '' && typeof (val[1] !== 'undefined'))
@@ -179,9 +191,9 @@ export default compose(
 					accum[k] = v
 					return accum
 				}, {})
-			if (edit) {
-				props.client
-					.mutate({
+			try {
+				if (edit) {
+					const response = await props.client.mutate({
 						mutation: EDIT_CLASSROOM_MUTATION,
 						variables: {
 							...valuesToEdit,
@@ -189,44 +201,41 @@ export default compose(
 							classroomId: props.classroomId
 						}
 					})
-					.then(response => {
-						resetForm()
-						setSubmitting(false)
-						setStatus({ success: true })
-						setGqlIds({ classroomId: response.data.createClassroom.id })
-						setSnackState({
-							message: 'Successfully created a classroom!',
-							variant: 'success',
-							open: true
-						})
+					resetForm()
+					setSubmitting(false)
+					setStatus({ success: true })
+					setGqlIds({ classroomId: response.data.updateClassroom.id })
+					setSnackState({
+						message: 'Successfully edited this classroom!',
+						variant: 'success',
+						open: true
 					})
-					.catch(error => {
-						setErrors({ name: error.message })
-					})
-			} else {
-				props.client
-					.mutate({
+				} else {
+					const response = await props.client.mutate({
 						mutation: CREATE_CLASSROOM_MUTATION,
 						variables: {
 							...values,
 							classroomImage
 						}
 					})
-					.then(response => {
-						resetForm()
-						setSubmitting(false)
-						setStatus({ success: true })
-						setGqlIds({ classroomId: response.data.createClassroom.id })
-						setSnackState({
-							message: 'Successfully created a classroom!',
-							variant: 'success',
-							open: true
-						})
+					resetForm()
+					setSubmitting(false)
+					setStatus({ success: true })
+					setGqlIds({ classroomId: response.data.createClassroom.id })
+					setSnackState({
+						message: 'Successfully created a classroom!',
+						variant: 'success',
+						open: true
 					})
-					.catch(error => {
-						setErrors({ name: error.message })
-					})
+				}
+			} catch (error) {
+				setSnackState({
+					message: error.message,
+					variant: 'error',
+					open: true
+				})
 			}
+
 			setSubmitting(false)
 		}
 	})

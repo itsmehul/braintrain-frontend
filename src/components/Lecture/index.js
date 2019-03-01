@@ -31,7 +31,7 @@ const LectureCard = ({lecture, myclass, batchId, client, history}) => {
     }
 	return (
 		<div className="lectures">
-			{myclass && <LectureAction lectureId={lecture.id} />}
+			{myclass && <LectureAction lectureId={lecture.id} dataToEdit={lecture}/>}
 			<div className="lecture_heading">
 				<h3>{lecture.name}</h3>
 				<p>{lecture.students && lecture.students.length} <Group fontSize="small"/></p>

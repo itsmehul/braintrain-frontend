@@ -4,9 +4,7 @@ import PropTypes from 'prop-types'
 import { withFormik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 
-import {
-	TextField,
-} from 'formik-material-ui'
+import { TextField } from 'formik-material-ui'
 import AccountCircle from '@material-ui/icons/AccountCircle'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import Visibility from '@material-ui/icons/Visibility'
@@ -19,25 +17,23 @@ import { withRouter } from 'react-router-dom'
 import { withFirebase } from '../../components/Firebase'
 import { withApollo } from 'react-apollo'
 import { compose } from 'recompose'
-import { connect } from "react-redux";
-import { setUserData } from "../../actions";
-import { ROLE } from '../../constants/roles';
-import { LOGIN_MUTATION } from '../../gql/Mutations';
+import { connect } from 'react-redux'
+import { setUserData } from '../../actions'
+import { ROLE } from '../../constants/roles'
+import { LOGIN_MUTATION } from '../../gql/Mutations'
 
 const mapDispatchToProps = dispatch => {
-  return { setUserData: user => dispatch(setUserData(user)) };
-};
+	return { setUserData: user => dispatch(setUserData(user)) }
+}
 const mapStateToProps = state => {
-  return { user: state.myreducer.user,
-    snackState: state.myreducer.snackState
-  };
-};
+	return { user: state.myreducer.user, snackState: state.myreducer.snackState }
+}
 
 const _confirm = async ({ data }, props) => {
 	const { token } = data.login
 	_saveUserData(token)
 }
-const _saveUserData = (token,role) => {
+const _saveUserData = (token, role) => {
 	localStorage.setItem(AUTH_TOKEN, token)
 }
 
@@ -83,7 +79,11 @@ const SignInForm = ({ values, errors, touched, isSubmitting, submitForm }) => {
 					)
 				}}
 			/>
-			<Button variant="contained" color="primary" disabled={isSubmitting} onClick={submitForm}>
+			<Button
+				variant="contained"
+				color="primary"
+				disabled={isSubmitting}
+				onClick={submitForm}>
 				{isSubmitting ? 'ENTERING' : 'ENTER PORTAL'}
 			</Button>
 		</Form>
@@ -96,7 +96,10 @@ export default compose(
 	withRouter,
 	withFirebase,
 	withApollo,
-	connect(mapStateToProps,mapDispatchToProps),
+	connect(
+		mapStateToProps,
+		mapDispatchToProps
+	),
 	withFormik({
 		mapPropsToValues({ email, password }) {
 			return {
@@ -110,41 +113,38 @@ export default compose(
 				.required('Email is required'),
 			password: Yup.string().required('Password is required')
 		}),
-		handleSubmit(values, { resetForm, setErrors, setSubmitting, props }) {
+		handleSubmit: async (
+			values,
+			{ resetForm, setErrors, setSubmitting, props }
+		) => {
 			setSubmitting(true)
 			const { email, password } = values
-			props.firebase
-				.doSignInWithEmailAndPassword(email, password)
-				.then(authUser => {
-					setSubmitting(false)
-					const { uid, email } = authUser.user
-					props.client
-						.mutate({
-							mutation: LOGIN_MUTATION,
-							variables: { fid: uid, email }
-						})
-						.then(response => {
-							_confirm(response, props)
-							resetForm()
-							
-								props.history.push(ROUTES.HOME)
-						})
-						.catch(error => {
-							setErrors({ email: error.message })
-						})
+			try {
+				const authUser = await props.firebase.doSignInWithEmailAndPassword(
+					values.email,
+					password
+				)
+				const { uid, email } = authUser.user
+				const response = await props.client.mutate({
+					mutation: LOGIN_MUTATION,
+					variables: { fid: uid, email }
 				})
-				.catch(error => {
-					switch (error.code) {
-						case 'auth/wrong-password':
-							setErrors({ password: error.message })
-							break
-						case 'auth/user-not-found':
-							setErrors({ email: error.message })
-							break
-						default:
-							setErrors({ email: error.message })
-					}
-				})
+				_confirm(response, props)				
+				resetForm()
+				setSubmitting(false)
+				props.history.push(ROUTES.CLASSROOMS)
+			} catch (error) {
+				switch (error.code) {
+					case 'auth/wrong-password':
+						setErrors({ password: error.message })
+						break
+					case 'auth/user-not-found':
+						setErrors({ email: error.message })
+						break
+					default:
+						setErrors({ email: error.message })
+				}
+			}
 			setSubmitting(false)
 		}
 	})

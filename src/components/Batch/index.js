@@ -54,7 +54,7 @@ const BatchCard = ({
 	
 	return (
 		<Paper className="batch">
-			{myclass && <BatchAction create={false} batchId={batch.id} />}
+			{myclass && <BatchAction create={false} batchId={batch.id} dataToEdit={batch}/>}
 			{myclass && <LectureAction create={true} batchId={batch.id} classroomId={classroomId}/>}
 			<div className="batch_heading">
 				<h3>{batch.name}</h3>

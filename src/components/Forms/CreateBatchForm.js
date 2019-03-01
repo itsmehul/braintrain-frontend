@@ -30,7 +30,6 @@ const CreateBatchForm = ({
 	status,
 	edit
 }) => {
-
 	return (
 		<React.Fragment>
 			<Form>
@@ -40,7 +39,8 @@ const CreateBatchForm = ({
 					name="name"
 					label="Name"
 					component={TextField}
-					variant="outlined"
+					variant="filled"
+					multiline
 				/>
 				<Field
 					className="form_text_field"
@@ -48,14 +48,16 @@ const CreateBatchForm = ({
 					name="description"
 					label="description"
 					component={TextField}
-					variant="outlined"
+					variant="filled"
+					multiline
 				/>
 				<Field
 					className="form_text_field"
 					type="datetime-local"
 					name="startsFrom"
 					component={TextField}
-					variant="outlined"
+					variant="filled"
+					multiline
 				/>
 				<Field
 					className="form_text_field"
@@ -63,7 +65,8 @@ const CreateBatchForm = ({
 					name="fee"
 					label="fee"
 					component={TextField}
-					variant="outlined"
+					variant="filled"
+					multiline
 				/>
 
 				<Button
@@ -91,84 +94,80 @@ export default compose(
 		mapDispatchToProps
 	),
 	withFormik({
-		mapPropsToValues({ name, description, startsFrom, fee }) {
+		mapPropsToValues({ name, description, startsFrom, fee, dataToEdit }) {
 			return {
-				name: name || '',
-				description: description || '',
-				startsFrom: startsFrom || '',
-				fee: fee || ''
+				name: name || dataToEdit?dataToEdit.name:'',
+				description: description || dataToEdit?dataToEdit.description:'',
+				startsFrom: startsFrom || dataToEdit?dataToEdit.startsFrom:'',
+				fee: fee || dataToEdit?dataToEdit.fee:''
 			}
 		},
 		validationSchema: Yup.object().shape({
-			name: Yup.string().max(24,`Don't exceed more than 24 characters`),
-			description: Yup.string().max(150,`Don't exceed more than 150 characters`),
+			name: Yup.string().max(24, `Don't exceed more than 24 characters`),
+			description: Yup.string().max(
+				150,
+				`Don't exceed more than 150 characters`
+			),
 			startsFrom: Yup.date().min(new Date()),
-			fee: Yup.string(),
+			fee: Yup.string()
 		}),
-		handleSubmit(
+		handleSubmit: async (
 			values,
 			{ resetForm, setErrors, setSubmitting, setStatus, props }
-		) {
+		) => {
 			const { setGqlIds, gqlIds, edit, batchId } = props
-			const classroomId = props.classroomId?props.classroomId:gqlIds.classroomId
+			console.log(props)
+			const classroomId = props.classroomId
+				? props.classroomId
+				: gqlIds.classroomId
 			const valuesToEdit = Object.entries(values)
 				.filter(val => val[1] !== '')
 				.reduce((accum, [k, v]) => {
 					accum[k] = v
 					return accum
 				}, {})
-			console.log(values)
-
-			if (edit) {
-				props.client
-					.mutate({
+			try {
+				if (edit) {
+					const response = await props.client.mutate({
 						mutation: EDIT_BATCH_MUTATION,
 						variables: {
 							...valuesToEdit,
 							batchId
 						}
 					})
-					.then(response => {
-						resetForm()
-						setSubmitting(false)
-						setStatus({ success: true })
-						setGqlIds({ batchId: response.data.createBatch.id })
-						setSnackState({
-							message: 'Successfully created a classroom!',
-							variant: 'success',
-							open: true
-						})
+					resetForm()
+					setSubmitting(false)
+					setStatus({ success: true })
+					setGqlIds({ batchId: response.data.updateBatch.id })
+					setSnackState({
+						message: 'Successfully edited this batch!',
+						variant: 'success',
+						open: true
 					})
-					.catch(error => {
-						setErrors({ name: error.message })
-					})
-			} else {
-				props.client
-					.mutate({
+				} else {
+					const response = await props.client.mutate({
 						mutation: CREATE_BATCH_MUTATION,
 						variables: {
 							...values,
 							classroomId
 						}
 					})
-					.then(response => {
-						resetForm()
-						setSubmitting(false)
-						setStatus({ success: true })
-						setGqlIds({ batchId: response.data.createBatch.id })
-						setSnackState({
-							message: 'Successfully created a batch!',
-							variant: 'success',
-							open: true
-						})
+					resetForm()
+					setSubmitting(false)
+					setStatus({ success: true })
+					setGqlIds({ batchId: response.data.createBatch.id })
+					setSnackState({
+						message: 'Successfully created a batch!',
+						variant: 'success',
+						open: true
 					})
-					.catch(error => {
-						setSnackState({
-							message: `${error}`,
-							variant: 'error',
-							open: true
-						})
-					})
+				}
+			} catch (error) {
+				setSnackState({
+					message: error.message,
+					variant: 'error',
+					open: true
+				})
 			}
 
 			setSubmitting(false)

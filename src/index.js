@@ -59,7 +59,8 @@ const theme = createMuiTheme({
 })
 
 const httpLink = createHttpLink({
-	uri: 'https://fathomless-cove-25949.herokuapp.com/'
+	// uri: 'https://fathomless-cove-25949.herokuapp.com/'
+	uri: 'http://localhost:4000/'
 })
 const authLink = setContext((_, { headers }) => {
 	const token = localStorage.getItem(AUTH_TOKEN)

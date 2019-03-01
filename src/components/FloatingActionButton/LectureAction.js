@@ -104,7 +104,7 @@ function LectureActions(props) {
 			</Fab>
 			{openLecture && (
 				<SimpleDialog close={() => setOpenLecture(false)}>
-					<CreateLectureForm lectureId={props.lectureId} edit={true} />
+					<CreateLectureForm lectureId={props.lectureId} edit={true} dataToEdit={props.dataToEdit}/>
 				</SimpleDialog>
 			)}
 		</div>

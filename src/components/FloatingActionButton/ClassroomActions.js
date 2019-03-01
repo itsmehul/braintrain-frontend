@@ -34,7 +34,6 @@ const styles = theme => ({
 
 function ClassroomActions(props) {
 	const [openClassroom, setOpenClassroom] = React.useState(false)
-
 	const deleteClassroom = () => {
 		props.client
 			.mutate({
@@ -49,7 +48,6 @@ function ClassroomActions(props) {
 					variant: 'success',
 					open: true
 				})
-				props.history.push(ROUTES.CLASSROOMS)
 			})
 			.catch(error => {
 				console.log(error)
@@ -82,7 +80,7 @@ function ClassroomActions(props) {
 				<DeleteIcon fontSize="small"/>
 			</Fab>
 			{openClassroom&&<SimpleDialog close={()=>setOpenClassroom(false)}>
-				<CreateClassroomForm classroomId={props.classroomId} edit={true} />
+				<CreateClassroomForm classroomId={props.classroomId} edit={true} dataToEdit={props.dataToEdit} />
 			</SimpleDialog>}
 		</div>
 	)

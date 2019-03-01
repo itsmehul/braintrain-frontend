@@ -41,7 +41,7 @@ function SimpleDialog(props) {
 				style={{
 					display: 'flex',
 					justifyContent: 'center',
-					paddingBottom: '1em'
+					padding: '1em'
 				}}>
 				{children}
 			</div>

@@ -51,7 +51,6 @@ function BatchActions(props) {
 					variant: 'success',
 					open: true
 				})
-				props.history.push(ROUTES.CLASSROOMS)
 			})
 			.catch(error => {
 				console.log(error)
@@ -84,7 +83,7 @@ function BatchActions(props) {
 				<DeleteIcon fontSize="small"/>
 				</Fab>
 			{openBatch&&<SimpleDialog  close={()=>setOpenBatch(false)}>
-				<CreateBatchForm classroomId={props.classroomId} batchId={props.batchId} edit={edit} />
+				<CreateBatchForm classroomId={props.classroomId} batchId={props.batchId} edit={edit} dataToEdit={props.dataToEdit}/>
 			</SimpleDialog>}
 	</div>
 	)

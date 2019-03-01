@@ -51,7 +51,7 @@ class ClassroomDetails extends React.Component{
 								<React.Fragment>
 									<div className="sidebar">
 										<Paper className="classroom_card">
-											{myclass && <ClassroomActions classroomId={id} />}
+											{myclass && <ClassroomActions classroomId={id} dataToEdit={data.classroom}/>}
 											<div style={{ padding: '7px' }}>
 												<h2>{name}</h2>
 												<p>About</p>
@@ -91,6 +91,7 @@ class ClassroomDetails extends React.Component{
 													<LectureCard
 														lecture={lecture}
 														batchId={batch.id}
+														startsFrom={batch.startsFrom}
 														myclass={myclass}
 													/>
 												))}
