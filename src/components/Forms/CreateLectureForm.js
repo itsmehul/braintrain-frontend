@@ -11,7 +11,7 @@ import { withFirebase } from '../../components/Firebase'
 import { withApollo } from 'react-apollo'
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
-import { setGqlIds, setSnackState } from '../../actions'
+import { setGqlIds, setSnackState, setDialog } from '../../actions'
 import {
 	EDIT_LECTURE_MUTATION,
 	CREATE_LECTURE_MUTATION
@@ -19,7 +19,8 @@ import {
 const mapDispatchToProps = dispatch => {
 	return {
 		setGqlIds: id => dispatch(setGqlIds(id)),
-		setSnackState: state => dispatch(setSnackState(state))
+		setSnackState: state => dispatch(setSnackState(state)),
+		setDialog: state => dispatch(setDialog(state))
 	}
 }
 const mapStateToProps = state => {
@@ -60,7 +61,7 @@ const CreateLectureForm = ({
 					className="form_text_field"
 					type="datetime-local"
 					name="liveAt"
-					label="liveAt"
+					label="lecture begins at"
 					component={TextField}
 					variant="filled"
 				/>
@@ -68,7 +69,7 @@ const CreateLectureForm = ({
 					className="form_text_field"
 					type="datetime-local"
 					name="endAt"
-					label="endAt"
+					label="lecture ends at"
 					component={TextField}
 					variant="filled"
 				/>
@@ -102,8 +103,8 @@ export default compose(
 			return {
 				name: name || dataToEdit ? dataToEdit.name : '',
 				description: description || dataToEdit ? dataToEdit.description : '',
-				liveAt: liveAt || dataToEdit ? dataToEdit.liveAt : null,
-				endAt: endAt || dataToEdit ? dataToEdit.endAt : null
+				liveAt: liveAt || dataToEdit ? dataToEdit.liveAt.substring(0,16) : '',
+				endAt: endAt || dataToEdit ? dataToEdit.endAt.substring(0,16) : ''
 			}
 		},
 		validationSchema: Yup.object().shape({
@@ -145,6 +146,7 @@ export default compose(
 						variant: 'success',
 						open: true
 					})
+					props.setDialog({open:false})
 				} else {
 					const response = await props.client.mutate({
 						mutation: CREATE_LECTURE_MUTATION,
@@ -158,13 +160,13 @@ export default compose(
 						}
 					})
 					resetForm()
-					setSubmitting(false)
 					setStatus({ success: true })
 					setSnackState({
 						message: 'Successfully created lecture!',
 						variant: 'success',
 						open: true
 					})
+					props.setAllowNext(false)		
 				}
 			} catch (error) {
 				setSnackState({

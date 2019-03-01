@@ -12,7 +12,7 @@ import { withFirebase } from '../../components/Firebase'
 import { withApollo } from 'react-apollo'
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
-import { setGqlIds, setSnackState } from '../../actions'
+import { setGqlIds, setSnackState, setDialog } from '../../actions'
 import {
 	CREATE_CLASSROOM_MUTATION,
 	EDIT_CLASSROOM_MUTATION
@@ -24,7 +24,8 @@ import { cloneDeep } from 'apollo-utilities';
 const mapDispatchToProps = dispatch => {
 	return {
 		setGqlIds: id => dispatch(setGqlIds(id)),
-		setSnackState: state => dispatch(setSnackState(state))
+		setSnackState: state => dispatch(setSnackState(state)),
+		setDialog: state => dispatch(setDialog(state))
 	}
 }
 const mapStateToProps = state => {
@@ -155,9 +156,9 @@ export default compose(
 			}
 		},
 		validationSchema: Yup.object().shape({
-			name: Yup.string().max(50, `Don't exceed more than 50 characters`),
+			name: Yup.string().max(200, `Don't exceed more than 50 characters`),
 			description: Yup.string().max(
-				555,
+				2000,
 				`Don't exceed more than 555 characters`
 			),
 			learning: Yup.string(),
@@ -210,6 +211,8 @@ export default compose(
 						variant: 'success',
 						open: true
 					})
+					props.setDialog({open:false})
+
 				} else {
 					const response = await props.client.mutate({
 						mutation: CREATE_CLASSROOM_MUTATION,
@@ -221,6 +224,7 @@ export default compose(
 					resetForm()
 					setSubmitting(false)
 					setStatus({ success: true })
+					props.setAllowNext(false)
 					setGqlIds({ classroomId: response.data.createClassroom.id })
 					setSnackState({
 						message: 'Successfully created a classroom!',

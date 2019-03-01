@@ -35,7 +35,7 @@ const LectureCard = ({lecture, myclass, batchId, client, history}) => {
 			<div className="lecture_heading">
 				<h3>{lecture.name}</h3>
 				<p>{lecture.students && lecture.students.length} <Group fontSize="small"/></p>
-				{(DAYS_LEFT!==0)?<Button onClick={()=>joinClass(lecture.id, batchId)} className="days_left" variant="outlined">JOIN</Button>:<p className="days_left">In {DAYS_LEFT} days</p>}
+				{(DAYS_LEFT===0)?<Button onClick={()=>joinClass(lecture.id, batchId)} className="days_left" variant="outlined">JOIN</Button>:<p className="days_left">In {DAYS_LEFT} days</p>}
 			</div>
 		</div>
 	)

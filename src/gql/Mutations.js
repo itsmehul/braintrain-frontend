@@ -20,6 +20,13 @@ export const CREATE_CLASSROOM_MUTATION = gql`
 			classroomImage: $classroomImage
 		) {
 			id
+			name
+			description
+			learning
+			language
+			requirements
+			objectives
+			classroomImage
 		}
 	}
 `
@@ -29,7 +36,7 @@ export const CREATE_BATCH_MUTATION = gql`
 					$name: String!
 					$description: String!
 					$startsFrom: String
-					$fee: Float
+					$fee: Float!
 					$classroomId: ID
 				) {
 					createBatch(
@@ -40,6 +47,10 @@ export const CREATE_BATCH_MUTATION = gql`
 						classroomId: $classroomId
 					) {
 						id
+						name
+						description
+						startsFrom
+						fee
 					}
 				}
 			`
@@ -57,6 +68,10 @@ export const CREATE_LECTURE_MUTATION = gql`
 						batchId: $batchId
 					) {
 						id
+						name
+						description
+						liveAt
+						endAt
 					}
 				}
 			`
@@ -84,6 +99,12 @@ export const EDIT_CLASSROOM_MUTATION = gql`
 			classroomImage: $classroomImage
 		) {
 			id
+			name
+			description
+			learning
+			language
+			requirements
+			objectives
 		}
 	}
 `
@@ -98,6 +119,10 @@ export const EDIT_BATCH_MUTATION = gql`
 						batchId: $batchId
 					) {
 						id
+						name
+						description
+						startsFrom
+						fee
 					}
 				}
 			`
@@ -112,6 +137,10 @@ export const EDIT_LECTURE_MUTATION = gql`
 						lectureId: $lectureId
 					) {
 						id
+						name
+						description
+						liveAt
+						endAt
 					}
 				}
 			`
@@ -126,7 +155,11 @@ export const DELETE_CLASSROOM_MUTATION = gql`
 export const DELETE_BATCH_MUTATION = gql`
 	mutation deleteBatchMutation($batchId: ID!) {
 		deleteBatch(batchId: $batchId) {
-			name
+			id
+						name
+						description
+						startsFrom
+						fee
 		}
 	}
 `
@@ -134,7 +167,11 @@ export const DELETE_BATCH_MUTATION = gql`
 export const DELETE_LECTURE_MUTATION = gql`
 	mutation deleteLectureMutation($lectureId: ID!) {
 		deleteLecture(lectureId: $lectureId) {
-			name
+			id
+						name
+						description
+						liveAt
+						endAt
 		}
 	}
 `
@@ -143,6 +180,10 @@ export const JOIN_LECTURE_MUTATION = gql`
 mutation joinLectureMutation($lectureId: ID! $batchId: ID!) {
 	joinLiveLecture(lectureId: $lectureId, batchId: $batchId) {
 		id
+						name
+						description
+						liveAt
+						endAt
 	}
 }
 `
@@ -152,6 +193,10 @@ export const JOIN_BATCH_MUTATION = gql`
 mutation joinBatchMutation($batchId: ID! $classroomId: ID!) {
 	joinBatch(batchId: $batchId, classroomId: $classroomId) {
 		id
+						name
+						description
+						startsFrom
+						fee
 	}
 }
 `
@@ -174,7 +219,10 @@ mutation EditUserMutation(
   $name: String $description: String $profession: String $dpUrl: String
 ) {
   updateUser(name: $name, description: $description, profession: $profession, dpUrl: $dpUrl) {
-	name
+	name 
+	description
+	profession
+	dpUrl
   }
 }
 `;

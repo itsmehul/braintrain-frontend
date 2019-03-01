@@ -19,7 +19,6 @@ function SimpleDialog(props) {
 
 	const handleClose = value => {
 		setDialog({open:false});
-		console.log(typeof(props.close))
 		if(typeof(props.close)!=='undefined'){props.close()}
 	}
 	return (

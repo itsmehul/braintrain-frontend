@@ -56,8 +56,6 @@ function LectureActions(props) {
 				console.log(error)
 			})
 	}
-	console.log(props.batchId)
-	console.log(props.classroomId)
 	const { classes } = props
 	if (props.create)
 		return (

@@ -30,14 +30,14 @@ function getSteps() {
 	]
 }
 
-function getStepContent(step, edit) {
+function getStepContent(step, edit, setAllowNext) {
 	switch (step) {
 		case 0:
-			return <CreateClassroomForm edit={edit}/>
+			return <CreateClassroomForm edit={edit} setAllowNext={setAllowNext}/>
 		case 1:
-			return <CreateBatchForm edit={edit}/>
+			return <CreateBatchForm edit={edit} setAllowNext={setAllowNext}/>
 		case 2:
-			return <CreateLectureForm edit={edit}/>
+			return <CreateLectureForm edit={edit} setAllowNext={setAllowNext}/>
 		default:
 			return 'Unknown step'
 	}
@@ -46,6 +46,7 @@ function getStepContent(step, edit) {
 function ClassroomCreationStepper({edit}) {
 	const classes = useStyles()
 	const [activeStep, setActiveStep] = React.useState(0)
+	const [allowNext, setAllowNext] = React.useState(true)
   const [skipped, setSkipped] = React.useState(new Set())
 	const steps = getSteps()
 
@@ -59,6 +60,7 @@ function ClassroomCreationStepper({edit}) {
 
 	function handleNext() {
 		let newSkipped = skipped
+		setAllowNext(true)
 		if (isStepSkipped(activeStep)) {
 			newSkipped = new Set(newSkipped.values())
 			newSkipped.delete(activeStep)
@@ -122,7 +124,7 @@ function ClassroomCreationStepper({edit}) {
 					</div>
 				) : (
 					<div>
-						{getStepContent(activeStep, edit)}
+						{getStepContent(activeStep, edit, setAllowNext)}
 						<div style={{ display: 'flex', justifyContent: 'center' }}>
 							<Button
 								disabled={activeStep === 0}
@@ -144,6 +146,7 @@ function ClassroomCreationStepper({edit}) {
 								// variant="contained"
 								color="primary"
 								onClick={handleNext}
+								disabled={allowNext}
 								className={classes.button}>
 								{activeStep === steps.length - 1 ? 'Finish' : 'Next'}
 							</Button>

@@ -38,6 +38,7 @@ export const CLASSROOM_QUERY = gql`
 					id
 					name
 					liveAt
+					endAt
 					students {
 						name
 					}
@@ -92,6 +93,7 @@ export const CLASSROOM_QUERY_LOGGEDIN = gql`
 						name
 					}
 					liveAt
+					endAt
 				}
 				students {
 					id

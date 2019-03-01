@@ -48,6 +48,7 @@ function ClassroomActions(props) {
 					variant: 'success',
 					open: true
 				})
+				props.history.push(ROUTES.CLASSROOMS)
 			})
 			.catch(error => {
 				console.log(error)

@@ -60,9 +60,9 @@ const ClassroomsPage = props => {
 
 											<div className="classroom_body">
 												<h2>
-													<mark>{classroom.name}</mark>
+													<mark>{classroom.name.substring(0,50)}</mark>
 												</h2>
-												<h6>{classroom.description}</h6>
+												<h6>{classroom.description.substring(0,555)}...</h6>
 											</div>
 										</Paper>
 									</li>

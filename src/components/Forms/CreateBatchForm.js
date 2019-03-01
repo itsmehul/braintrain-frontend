@@ -10,12 +10,16 @@ import { withFirebase } from '../Firebase'
 import { withApollo } from 'react-apollo'
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
-import { setGqlIds, setSnackState } from '../../actions'
+import { setGqlIds, setSnackState, setDialog } from '../../actions'
 import { CREATE_BATCH_MUTATION, EDIT_BATCH_MUTATION } from '../../gql/Mutations'
+import { CLASSROOM_QUERY_LOGGEDIN } from '../../gql/Queries'
+import gql from 'graphql-tag'
+
 const mapDispatchToProps = dispatch => {
 	return {
 		setGqlIds: id => dispatch(setGqlIds(id)),
-		setSnackState: state => dispatch(setSnackState(state))
+		setSnackState: state => dispatch(setSnackState(state)),
+		setDialog: state => dispatch(setDialog(state))
 	}
 }
 const mapStateToProps = state => {
@@ -55,9 +59,9 @@ const CreateBatchForm = ({
 					className="form_text_field"
 					type="datetime-local"
 					name="startsFrom"
+					label="start date"
 					component={TextField}
 					variant="filled"
-					multiline
 				/>
 				<Field
 					className="form_text_field"
@@ -96,10 +100,10 @@ export default compose(
 	withFormik({
 		mapPropsToValues({ name, description, startsFrom, fee, dataToEdit }) {
 			return {
-				name: name || dataToEdit?dataToEdit.name:'',
-				description: description || dataToEdit?dataToEdit.description:'',
-				startsFrom: startsFrom || dataToEdit?dataToEdit.startsFrom:'',
-				fee: fee || dataToEdit?dataToEdit.fee:''
+				name: name || dataToEdit ? dataToEdit.name : '',
+				description: description || dataToEdit ? dataToEdit.description : '',
+				startsFrom: startsFrom || dataToEdit ? dataToEdit.startsFrom.substring(0,16) : '',
+				fee: fee || dataToEdit ? dataToEdit.fee : ''
 			}
 		},
 		validationSchema: Yup.object().shape({
@@ -109,7 +113,7 @@ export default compose(
 				`Don't exceed more than 150 characters`
 			),
 			startsFrom: Yup.date().min(new Date()),
-			fee: Yup.string()
+			fee: Yup.number().typeError('Please enter valid number')
 		}),
 		handleSubmit: async (
 			values,
@@ -128,39 +132,41 @@ export default compose(
 				}, {})
 			try {
 				if (edit) {
+					console.log(classroomId)
 					const response = await props.client.mutate({
 						mutation: EDIT_BATCH_MUTATION,
 						variables: {
 							...valuesToEdit,
+							fee: parseFloat(values.fee),
 							batchId
-						}
+						},
 					})
 					resetForm()
-					setSubmitting(false)
-					setStatus({ success: true })
 					setGqlIds({ batchId: response.data.updateBatch.id })
 					setSnackState({
 						message: 'Successfully edited this batch!',
 						variant: 'success',
 						open: true
 					})
+					props.setDialog({open:false})
+
 				} else {
 					const response = await props.client.mutate({
 						mutation: CREATE_BATCH_MUTATION,
 						variables: {
 							...values,
+							fee: parseFloat(values.fee),
 							classroomId
 						}
 					})
 					resetForm()
-					setSubmitting(false)
-					setStatus({ success: true })
 					setGqlIds({ batchId: response.data.createBatch.id })
 					setSnackState({
 						message: 'Successfully created a batch!',
 						variant: 'success',
 						open: true
 					})
+					props.setAllowNext(false)
 				}
 			} catch (error) {
 				setSnackState({
