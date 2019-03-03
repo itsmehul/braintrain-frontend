@@ -36,11 +36,13 @@ function SwipeableTemporaryDrawer({ isMobile, authUser }) {
   const sideList = (
     <div className={classes.list} style={{ paddingTop: "56px" }}>
       <List>
-        {authUser&&<ListItem button key={1}>
-          <NavLink to={ROUTES.HOME} style={{ color: "black" }}>
-            Home
-          </NavLink>
-        </ListItem>}
+        {
+        //   authUser&&<ListItem button key={1}>
+        //   <NavLink to={ROUTES.HOME} style={{ color: "black" }}>
+        //     Home
+        //   </NavLink>
+        // </ListItem>
+      }
         <ListItem button key={2}>
           <NavLink to={ROUTES.CLASSROOMS} style={{ color: "black" }}>
             Classrooms

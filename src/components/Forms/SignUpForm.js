@@ -287,7 +287,7 @@ export default compose(
 						`
 					})
 					await props.setUserData(user.data.myprofile)
-					props.history.push(ROUTES.HOME)
+					props.history.push(ROUTES.CLASSROOMS)
 				} catch (error) {
 					switch (error.code) {
 						case 'auth/email-already-in-use':
