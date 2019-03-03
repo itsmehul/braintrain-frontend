@@ -15,6 +15,7 @@ import { withRouter } from 'react-router-dom'
 import * as ROUTES from '../../constants/routes'
 import { Button } from '@material-ui/core';
 import './Styles.scss'
+import { CLASSROOM_QUERY_LOGGEDIN } from '../../gql/Queries';
 
 const mapDispatchToProps = dispatch => {
 	return {
@@ -41,8 +42,12 @@ function LectureActions(props) {
 			.mutate({
 				mutation: DELETE_LECTURE_MUTATION,
 				variables: {
-					batchId: props.batchId
-				}
+					lectureId: props.lectureId
+				},
+				refetchQueries: [{
+					query: CLASSROOM_QUERY_LOGGEDIN,
+					variables: { id: props.classroomId},
+				  }],
 			})
 			.then(response => {
 				setSnackState({
@@ -50,7 +55,6 @@ function LectureActions(props) {
 					variant: 'success',
 					open: true
 				})
-				props.history.push(ROUTES.CLASSROOMS)
 			})
 			.catch(error => {
 				console.log(error)

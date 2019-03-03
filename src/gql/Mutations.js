@@ -177,7 +177,7 @@ export const DELETE_LECTURE_MUTATION = gql`
 `
 
 export const JOIN_LECTURE_MUTATION = gql`
-mutation joinLectureMutation($lectureId: ID! $batchId: ID!) {
+mutation joinLectureMutation($lectureId: ID! $batchId: ID!){
 	joinLiveLecture(lectureId: $lectureId, batchId: $batchId) {
 		id
 						name

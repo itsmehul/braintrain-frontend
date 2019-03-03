@@ -1,25 +1,29 @@
 .lectures {
-    height: 60px;
-    width: 320px;
-    background-color: #fafafa;
-    margin-top: 7px;
-    .lecture_heading {
-      color: #212121;
-      display: flex;
-      align-items: baseline;
-      margin: 0 15px 0 15px;
-      h3 {
-        flex-grow: 1;
-        text-align: start;
-      }
-      * {
-        flex-shrink: 0;
-        width: 40px;
-        text-align: end;
-      }
-      .days_left{
-        flex: 1 0 40px;
-        align-self: center!important
-      }
-    }
-  }
+	height: 60px;
+	width: 320px;
+	background-color: #fafafa;
+	margin-top: 7px;
+	.lecture_heading {
+		color: #212121;
+		display: flex;
+		align-items: baseline;
+		margin: 0 15px 0 15px;
+		h3 {
+			flex-grow: 1;
+			text-align: start;
+		}
+		* {
+			flex-shrink: 0;
+			width: 40px;
+			text-align: end;
+		}
+		.days_left {
+			flex: 1 0 40px;
+			align-self: center !important;
+		}
+		p {
+			display: flex;
+			margin-right: 5px;
+		}
+	}
+}

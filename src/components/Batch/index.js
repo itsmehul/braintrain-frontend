@@ -11,9 +11,9 @@ import Paper from '@material-ui/core/Paper'
 import BatchAction from '../../components/FloatingActionButton/BatchAction'
 import { connect } from 'react-redux'
 import { AuthUserContext } from '../../components/Session'
-import LectureAction from '../FloatingActionButton/LectureAction';
-import { reflectAll } from 'async';
-import { USER_QUERY } from '../../gql/Queries';
+import LectureAction from '../FloatingActionButton/LectureAction'
+import { reflectAll } from 'async'
+import { CLASSROOM_QUERY_LOGGEDIN } from '../../gql/Queries'
 
 const BatchCard = ({
 	batch,
@@ -26,36 +26,51 @@ const BatchCard = ({
 }) => {
 	const [isMember, setIsMember] = React.useState(false)
 	if (user !== null) {
-		
-		React.useEffect(()=>{setIsMember(
-			batch
-			.students.some(a=>a.id===user.id)
-		)})
+		React.useEffect(() => {
+			setIsMember(batch.students.some(a => a.id === user.id))
+		})
 	}
 	async function joinBatch(batchId, classroomId) {
 		try {
-			// let request = new PaymentRequest(methods, details, options)
-			// const PaymentResponse = await request.show()
-			// console.log(PaymentResponse)
+			const response = await fetch(
+				`/pay/${classroomId}/${batchId}/${user.id}`,
+				{
+					method: 'POST',
+					credentials: 'include',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						fee: batch.fee,
+						name: batch.name
+					})
+				}
+			)
 
-			const response = await client.mutate({
-				mutation: JOIN_BATCH_MUTATION,
-				variables: { batchId, classroomId },
-				refetchQueries: [{
-					query: USER_QUERY,
-					variables: { repoFullName: 'apollographql/apollo-client' },
-				  }],
-			})
-			setIsMember(true)
+			let url = await response.json()
+			window.location = url.links[1].href
 		} catch (error) {
-			console.log(error)
+			return console.log(error)
 		}
 	}
-	
+
 	return (
 		<Paper className="batch">
-			{myclass && <BatchAction create={false} batchId={batch.id} dataToEdit={batch} classroomId={classroomId}/>}
-			{myclass && <LectureAction create={true} batchId={batch.id} classroomId={classroomId}/>}
+			{myclass && (
+				<BatchAction
+					create={false}
+					batchId={batch.id}
+					dataToEdit={batch}
+					classroomId={classroomId}
+				/>
+			)}
+			{myclass && (
+				<LectureAction
+					create={true}
+					batchId={batch.id}
+					classroomId={classroomId}
+				/>
+			)}
 			<div className="batch_heading">
 				<h3>{batch.name}</h3>
 				{isMember || myclass ? (
@@ -74,7 +89,7 @@ const BatchCard = ({
 									<Button
 										onClick={() => joinBatch(batch.id, classroomId)}
 										variant="contained">
-										Join Batch
+										Join Batch @{batch.fee}INR
 									</Button>
 								</div>
 							) : null

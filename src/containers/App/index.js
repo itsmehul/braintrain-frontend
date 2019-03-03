@@ -23,6 +23,7 @@ import gql from 'graphql-tag'
 import {compose} from 'recompose'
 import { setUserData } from '../../actions'
 import {withApollo} from 'react-apollo'
+import PaymentFailed from '../Payment';
 const mapStateToProps = state => {
 	return {
 		snackState: state.myreducer.snackState,
@@ -108,6 +109,7 @@ class App extends React.Component {
 												component={ClassroomDetails}
 											/>
 											<Route path={ROUTES.PROFILE} component={Profile} />
+											<Route path={ROUTES.PAYMENT_FAILED} component={PaymentFailed} />
 											<Route
 												path={ROUTES.ROOM + '/:id'}
 												component={StudyRoom}

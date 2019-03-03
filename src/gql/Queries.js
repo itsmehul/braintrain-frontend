@@ -34,6 +34,7 @@ export const CLASSROOM_QUERY = gql`
 				name
 				description
 				startsFrom
+				fee
 				lectures {
 					id
 					name
@@ -85,6 +86,7 @@ export const CLASSROOM_QUERY_LOGGEDIN = gql`
 				name
 				description
 				startsFrom
+				fee
 				lectures {
 					id
 					name

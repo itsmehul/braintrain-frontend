@@ -16,6 +16,7 @@ import {
 	EDIT_LECTURE_MUTATION,
 	CREATE_LECTURE_MUTATION
 } from '../../gql/Mutations'
+import { CLASSROOM_QUERY_LOGGEDIN } from '../../gql/Queries';
 const mapDispatchToProps = dispatch => {
 	return {
 		setGqlIds: id => dispatch(setGqlIds(id)),
@@ -138,7 +139,8 @@ export default compose(
 						variables: {
 							...valuesToEdit,
 							lectureId: props.lectureId
-						}
+						},
+						
 					})
 					resetForm()
 					setSnackState({
@@ -157,7 +159,11 @@ export default compose(
 							endAt,
 							classroomId,
 							batchId
-						}
+						},
+						refetchQueries: [{
+							query: CLASSROOM_QUERY_LOGGEDIN,
+							variables: { id: classroomId},
+						  }],
 					})
 					resetForm()
 					setStatus({ success: true })
@@ -166,7 +172,7 @@ export default compose(
 						variant: 'success',
 						open: true
 					})
-					props.setAllowNext(false)		
+					if(props.setAllowNext)props.setAllowNext(false)
 				}
 			} catch (error) {
 				setSnackState({

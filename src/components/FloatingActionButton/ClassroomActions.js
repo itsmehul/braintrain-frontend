@@ -14,6 +14,7 @@ import { compose } from 'recompose'
 import { withRouter } from 'react-router-dom'
 import * as ROUTES from '../../constants/routes'
 import { Button } from '@material-ui/core';
+import { CLASSROOMS_QUERY } from '../../gql/Queries';
 
 const mapDispatchToProps = dispatch => {
 	return {
@@ -40,7 +41,10 @@ function ClassroomActions(props) {
 				mutation: DELETE_CLASSROOM_MUTATION,
 				variables: {
 					classroomId: props.classroomId
-				}
+				},
+				refetchQueries: [{
+					query: CLASSROOMS_QUERY,
+				  }],
 			})
 			.then(response => {
 				setSnackState({

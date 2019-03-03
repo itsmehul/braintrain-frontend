@@ -16,6 +16,7 @@ import { withRouter } from 'react-router-dom'
 import * as ROUTES from '../../constants/routes'
 import { Button } from '@material-ui/core';
 import './Styles.scss'
+import { CLASSROOM_QUERY_LOGGEDIN } from '../../gql/Queries';
 const mapDispatchToProps = dispatch => {
 	return {
 		setSnackState: state => dispatch(setSnackState(state)),
@@ -43,7 +44,11 @@ function BatchActions(props) {
 				mutation: DELETE_BATCH_MUTATION,
 				variables: {
 					batchId: props.batchId
-				}
+				},
+				refetchQueries: [{
+					query: CLASSROOM_QUERY_LOGGEDIN,
+					variables: { id: props.classroomId},
+				  }],
 			})
 			.then(response => {
 				setSnackState({

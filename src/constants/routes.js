@@ -8,3 +8,4 @@ export const PASSWORD_FORGET = '/PasswordReset';
 export const CLASSROOMS = '/Classrooms';
 export const PROFILE = '/Profile';
 export const ROOM = '/Room'
+export const PAYMENT_FAILED = '/paymentfailed'

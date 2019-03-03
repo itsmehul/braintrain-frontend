@@ -132,7 +132,6 @@ export default compose(
 				}, {})
 			try {
 				if (edit) {
-					console.log(classroomId)
 					const response = await props.client.mutate({
 						mutation: EDIT_BATCH_MUTATION,
 						variables: {
@@ -140,6 +139,10 @@ export default compose(
 							fee: parseFloat(values.fee),
 							batchId
 						},
+						refetchQueries: [{
+							query: CLASSROOM_QUERY_LOGGEDIN,
+							variables: { id: classroomId},
+						  }],
 					})
 					resetForm()
 					setGqlIds({ batchId: response.data.updateBatch.id })
@@ -166,7 +169,7 @@ export default compose(
 						variant: 'success',
 						open: true
 					})
-					props.setAllowNext(false)
+					if(props.setAllowNext)props.setAllowNext(false)
 				}
 			} catch (error) {
 				setSnackState({

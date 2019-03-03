@@ -211,7 +211,7 @@ export default compose(
 						variant: 'success',
 						open: true
 					})
-					props.setDialog({open:false})
+					if(props.setAllowNext)props.setAllowNext(false)
 
 				} else {
 					const response = await props.client.mutate({
