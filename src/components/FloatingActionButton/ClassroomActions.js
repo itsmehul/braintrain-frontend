@@ -55,7 +55,11 @@ function ClassroomActions(props) {
 				props.history.push(ROUTES.CLASSROOMS)
 			})
 			.catch(error => {
-				console.log(error)
+				setSnackState({
+					message: error.message,
+					variant: 'error',
+					open: true
+				})
 			})
 	}
 	const { classes } = props

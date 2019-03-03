@@ -58,7 +58,11 @@ function BatchActions(props) {
 				})
 			})
 			.catch(error => {
-				console.log(error)
+				setSnackState({
+					message: error.message,
+					variant: 'error',
+					open: true
+				})
 			})
 	}
 	const { classes } = props

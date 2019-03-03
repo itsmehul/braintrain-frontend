@@ -140,7 +140,10 @@ export default compose(
 							...valuesToEdit,
 							lectureId: props.lectureId
 						},
-						
+						refetchQueries: [{
+							query: CLASSROOM_QUERY_LOGGEDIN,
+							variables: { id: props.classroomId},
+						  }],
 					})
 					resetForm()
 					setSnackState({

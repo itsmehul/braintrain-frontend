@@ -6,12 +6,15 @@ import { Link } from 'react-router-dom'
 import * as ROUTES from '../../constants/routes'
 import './index.scss'
 import { CLASSROOMS_QUERY } from '../../gql/Queries'
+import { compose } from "recompose";
+import { connect } from "react-redux";
 
 const styles = theme => ({})
 
 const ClassroomsPage = props => {
 	const { classes } = props
-
+	
+	
 	return (
 		<div className="page">
 			<Query query={CLASSROOMS_QUERY}>
@@ -41,7 +44,11 @@ const ClassroomsPage = props => {
 								gridGap: '20px',
 								gridTemplateColumns: 'repeat( auto-fit, minmax(300px, 1fr) )'
 							}}>
-							{classrooms.map((classroom,i) => (
+							{classrooms
+							.filter(function(c){
+								return c.name.toUpperCase().search((props.filter).toUpperCase())!==-1
+							})
+							.map((classroom,i) => (
 								<Link key={i} to={ROUTES.CLASSROOMS + '/' + classroom.id}>
 									<li className="reset hcenter" key={classroom.id}>
 										<Paper className="classrooms_card">
@@ -60,7 +67,7 @@ const ClassroomsPage = props => {
 
 											<div className="classroom_body">
 												<h2>
-													<mark>{classroom.name.substring(0,50)}</mark>
+													{classroom.name.substring(0,50)} <i>by {classroom.teacher.name}</i>
 												</h2>
 												<h6>{classroom.description.substring(0,555)}...</h6>
 											</div>
@@ -76,4 +83,13 @@ const ClassroomsPage = props => {
 	)
 }
 
-export default withStyles(styles)(ClassroomsPage)
+const mapStateToProps = state => {
+	return {
+		snackState: state.myreducer.snackState,
+    user: state.myreducer.user,
+    filter: state.myreducer.filter
+	}
+}
+
+
+export default compose(connect(mapStateToProps,null),withStyles(styles))(ClassroomsPage)

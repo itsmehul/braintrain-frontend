@@ -1,4 +1,4 @@
-import { SET_GQL_IDS, SET_SNACKSTATE, SET_DIALOG } from '../constants/actionTypes'
+import { SET_GQL_IDS, SET_SNACKSTATE, SET_DIALOG, SET_FILTER } from '../constants/actionTypes'
 import { SET_USER_DATA } from '../constants/actionTypes';
 
 
@@ -16,4 +16,8 @@ export function setSnackState(payload){
 
 export function setDialog(payload){
     return {type: SET_DIALOG, payload}
+}
+
+export function setFilter(payload){
+    return {type: SET_FILTER, payload}
 }

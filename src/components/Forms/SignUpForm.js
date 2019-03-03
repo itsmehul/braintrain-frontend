@@ -53,7 +53,6 @@ const SignUpForm = ({
 	const handleClickShowPassword = () => {
 		setShowPass(!showPass)
 	}
-	console.log(rest)
 	return (
 		<Form>
 			{!edit ? (

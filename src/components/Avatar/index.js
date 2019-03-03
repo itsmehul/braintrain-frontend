@@ -5,7 +5,6 @@ import { formatDate } from '../../utils/time';
 
 export default function AvatarCard({ user }) {
   const { createdAt, name, role, profession, dpUrl, email, description, teacherIn, studentIn } = user
-  console.log(user)
 	return (
 		<Paper className="avatar_card">
 			<h6>

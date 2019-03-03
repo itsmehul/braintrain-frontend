@@ -219,10 +219,19 @@ mutation EditUserMutation(
   $name: String $description: String $profession: String $dpUrl: String
 ) {
   updateUser(name: $name, description: $description, profession: $profession, dpUrl: $dpUrl) {
-	name 
-	description
-	profession
-	dpUrl
+	createdAt
+			name
+			role
+			profession
+			description
+			dpUrl
+			email
+			teacherIn {
+				name
+			}
+			studentIn {
+				name
+			}
   }
 }
 `;
@@ -231,6 +240,22 @@ export const LOGIN_MUTATION = gql`
 mutation LoginMutation($email: String!, $fid: String!) {
 	login(email: $email, fid: $fid) {
 		token
+		user{
+			id
+			createdAt
+			name
+			role
+			profession
+			description
+			dpUrl
+			email
+			teacherIn {
+				name
+			}
+			studentIn {
+				name
+			}
+		}
 	}
 }
 `

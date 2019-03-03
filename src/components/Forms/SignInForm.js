@@ -21,6 +21,7 @@ import { connect } from 'react-redux'
 import { setUserData } from '../../actions'
 import { ROLE } from '../../constants/roles'
 import { LOGIN_MUTATION } from '../../gql/Mutations'
+import { USER_QUERY } from '../../gql/Queries';
 
 const mapDispatchToProps = dispatch => {
 	return { setUserData: user => dispatch(setUserData(user)) }
@@ -29,7 +30,7 @@ const mapStateToProps = state => {
 	return { user: state.myreducer.user, snackState: state.myreducer.snackState }
 }
 
-const _confirm = async ({ data }, props) => {
+const _confirm = async ({ data }) => {
 	const { token } = data.login
 	_saveUserData(token)
 }
@@ -127,11 +128,18 @@ export default compose(
 				const { uid, email } = authUser.user
 				const response = await props.client.mutate({
 					mutation: LOGIN_MUTATION,
-					variables: { fid: uid, email }
+					variables: { fid: uid, email },
 				})
-				_confirm(response, props)				
+				await _confirm(response, props)				
 				resetForm()
 				setSubmitting(false)
+				await props.client.writeQuery({
+					query:USER_QUERY,
+					data:{
+						myprofile:{...response.data.login.user}
+					}
+				})
+				props.setUserData(response.data.login.user)
 				props.history.push(ROUTES.CLASSROOMS)
 			} catch (error) {
 				switch (error.code) {

@@ -18,11 +18,13 @@ import LoadingBar from '../../components/ProgressIndicators/LoadingBar'
 import BatchAction from '../../components/FloatingActionButton/BatchAction'
 
 class ClassroomDetails extends React.Component {
+
 	componentWillMount = () => {
 		this.classId = this.props.match.params.id
 	}
 
 	render() {
+		const {filter} = this.props
 		return (
 			<div className="page" style={{ backgroundColor: '#e0e0e0' }}>
 				<AuthUserContext.Consumer>
@@ -100,27 +102,35 @@ class ClassroomDetails extends React.Component {
 											)}
 										</div>
 										<div className="main">
-											{batches.map((batch,i) => (
-												<BatchCard
-													key={i}
-													batch={batch}
-													classroomId={id}
-													myclass={myclass}>
-													{batch.lectures
-														.filter(
-															lecture => new Date(lecture.endAt) > new Date()
-														)
-														.map((lecture, i) => (
-															<LectureCard
-																key={i}
-																lecture={lecture}
-																batchId={batch.id}
-																startsFrom={batch.startsFrom}
-																myclass={myclass}
-															/>
-														))}
-												</BatchCard>
-											))}
+											{batches
+												.filter(function(c) {
+													return (
+														c.name
+															.toUpperCase()
+															.search(filter.toUpperCase()) !== -1
+													)
+												})
+												.map((batch, i) => (
+													<BatchCard
+														key={i}
+														batch={batch}
+														classroomId={id}
+														myclass={myclass}>
+														{batch.lectures
+															.filter(
+																lecture => new Date(lecture.endAt) > new Date()
+															)
+															.map((lecture, i) => (
+																<LectureCard
+																	key={i}
+																	lecture={lecture}
+																	batchId={batch.id}
+																	startsFrom={batch.startsFrom}
+																	myclass={myclass}
+																/>
+															))}
+													</BatchCard>
+												))}
 										</div>
 									</React.Fragment>
 								)
@@ -134,7 +144,19 @@ class ClassroomDetails extends React.Component {
 }
 ClassroomDetails.propTypes = {}
 
+const mapStateToProps = state => {
+	return {
+		snackState: state.myreducer.snackState,
+		user: state.myreducer.user,
+		filter: state.myreducer.filter
+	}
+}
+
 export default compose(
 	withApollo,
-	withRouter
+	withRouter,
+	connect(
+		mapStateToProps,
+		null
+	)
 )(ClassroomDetails)

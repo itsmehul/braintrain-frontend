@@ -128,6 +128,7 @@ export const CLASSROOM_QUERY_LOGGEDIN = gql`
 export const USER_QUERY = gql`
 	query UserQuery {
 		myprofile {
+			id
 			createdAt
 			name
 			role

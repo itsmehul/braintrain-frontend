@@ -8,6 +8,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import useMedia from "../../hooks/windowHook";
 import Button from "@material-ui/core/Button";
+import SearchIcon from "@material-ui/icons/Search";
 import { NavLink } from "react-router-dom";
 import classNames from "classnames";
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -15,7 +16,11 @@ import * as ROUTES from "../../constants/routes";
 import SwipeableTemporaryDrawer from "./NavDrawer";
 import SignOutButton from "../SignOut";
 import { URL_REGEX } from "../../constants/regexfilters";
-
+import { InputBase } from "@material-ui/core";
+import { fade } from '@material-ui/core/styles/colorManipulator';
+import { compose } from "recompose";
+import { connect } from "react-redux";
+import { setFilter } from "../../actions";
 const styles = theme => ({
   margin: {
     margin: theme.spacing.unit
@@ -58,7 +63,31 @@ const styles = theme => ({
   loginbuttonactivemobile: {
     color: "white!important",
     backgroundColor: "transparent!important"
-  }
+  },
+  search: {
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
+    marginRight: theme.spacing.unit * 2,
+    marginLeft: 0,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing.unit * 3,
+      width: 'auto',
+    },
+  },
+  searchIcon: {
+    width: theme.spacing.unit * 9,
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 function Navbar(props) {
@@ -68,7 +97,7 @@ function Navbar(props) {
   const screenSize = useMedia();
 
   const { classes } = props;
-  let title="braintrain"
+  let title="Braintrain"
   //   if (isMobile === true) {
   //     if ((window.location.pathname)==="/Classroom") {
   //       console.log('run')
@@ -94,7 +123,6 @@ function Navbar(props) {
     setAnchorEl(null);
   }
   const isMobile = screenSize === "mobile";
-
   if (props.authUser) {
     return (
       <React.Fragment>
@@ -119,6 +147,15 @@ function Navbar(props) {
             >
               {title}
             </Typography>
+            <div style={{position:'relative', flexGrow:'2'}}>
+            <div style={{position:'absolute', left:'-25px', bottom:'0'}}>
+              <SearchIcon />
+            </div>
+            <InputBase
+              placeholder="Search…"
+              onChange={(e)=>props.setFilter(e.target.value)}
+            />
+          </div>
             {!isMobile && (
               <React.Fragment>
                 <Button
@@ -129,14 +166,14 @@ function Navbar(props) {
                 >
                   Classrooms
                 </Button>
-                <Button
+                {/* <Button
                   component={NavLink}
                   to={ROUTES.HOME}
                   className={classNames(classes.margin, classes.navbuttonRoot)}
                   activeClassName={classes.activenavbuttonRoot}
                 >
                   Home
-                </Button>
+                </Button> */}
               </React.Fragment>
             )}
             <div>
@@ -236,4 +273,17 @@ function Navbar(props) {
   }
 }
 
-export default withStyles(styles)(Navbar);
+const mapStateToProps = state => {
+	return {
+		snackState: state.myreducer.snackState,
+    user: state.myreducer.user,
+    filter: state.myreducer.filter
+	}
+}
+
+const mapDispatchToProps = dispatch => {
+	return { setFilter: text => dispatch(setFilter(text)) }
+}
+
+
+export default compose(connect(mapStateToProps,mapDispatchToProps),withStyles(styles))(Navbar);

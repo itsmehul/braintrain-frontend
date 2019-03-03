@@ -2,7 +2,8 @@ import {
 	SET_USER_DATA,
 	SET_GQL_IDS,
 	SET_SNACKSTATE,
-	SET_DIALOG
+	SET_DIALOG,
+	SET_FILTER
 } from '../constants/actionTypes'
 const initialState = {
 	gqlIds: {
@@ -17,7 +18,8 @@ const initialState = {
 	user: null,
 	dialogState: {
 		open: false
-	}
+	},
+	filter:''
 }
 function myreducer(state = initialState, action) {
 	if (action.type === SET_USER_DATA) {
@@ -46,6 +48,13 @@ function myreducer(state = initialState, action) {
 				...state.dialogState,
 				...action.payload
 			}
+		}
+	}
+	if (action.type === SET_FILTER) {
+		return {
+			...state,
+			filter: action.payload
+
 		}
 	}
 	return state

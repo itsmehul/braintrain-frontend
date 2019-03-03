@@ -20,6 +20,7 @@ import {
 import CustomImageInput from '../CustomImageInput/CustomImageInput'
 import axios from 'axios'
 import { cloneDeep } from 'apollo-utilities';
+import { CLASSROOMS_QUERY } from '../../gql/Queries';
 
 const mapDispatchToProps = dispatch => {
 	return {
@@ -183,7 +184,11 @@ export default compose(
 				)
 				classroomImage = cloudinaryData.data.url
 			} catch (error) {
-				console.log(error)
+				setSnackState({
+					message: error.message,
+					variant: 'error',
+					open: true
+				})
 			}}
 			values = { classroomImage, ...values }
 			const valuesToEdit = Object.entries(values)
@@ -200,7 +205,11 @@ export default compose(
 							...valuesToEdit,
 							classroomImage,
 							classroomId: props.classroomId
-						}
+						},
+						refetchQueries: [{
+							query: CLASSROOMS_QUERY,
+							variables: { id: props.classroomId},
+						  }],
 					})
 					resetForm()
 					setSubmitting(false)
@@ -219,7 +228,11 @@ export default compose(
 						variables: {
 							...values,
 							classroomImage
-						}
+						},
+						refetchQueries: [{
+							query: CLASSROOMS_QUERY,
+							variables: { id: props.classroomId},
+						  }],
 					})
 					resetForm()
 					setSubmitting(false)

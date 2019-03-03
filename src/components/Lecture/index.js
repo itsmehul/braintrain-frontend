@@ -23,7 +23,6 @@ const LectureCard = ({ lecture, myclass, batchId, client, history, match }) => {
 				}
 			})
 			.then(response => {
-				console.log(response)
 				history.push(ROUTES.ROOM + '/' + lecture.id)
 			})
 			.catch(error => {

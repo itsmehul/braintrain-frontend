@@ -119,8 +119,7 @@ export default compose(
 			values,
 			{ resetForm, setErrors, setSubmitting, setStatus, props }
 		) => {
-			const { setGqlIds, gqlIds, edit, batchId } = props
-			console.log(props)
+			const { setGqlIds, gqlIds, edit, batchId, setSnackState } = props
 			const classroomId = props.classroomId
 				? props.classroomId
 				: gqlIds.classroomId
@@ -160,7 +159,11 @@ export default compose(
 							...values,
 							fee: parseFloat(values.fee),
 							classroomId
-						}
+						},
+						refetchQueries: [{
+							query: CLASSROOM_QUERY_LOGGEDIN,
+							variables: { id: props.classroomId},
+						  }],
 					})
 					resetForm()
 					setGqlIds({ batchId: response.data.createBatch.id })

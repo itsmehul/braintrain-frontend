@@ -13,7 +13,7 @@ import { connect } from 'react-redux'
 import { AuthUserContext } from '../../components/Session'
 import LectureAction from '../FloatingActionButton/LectureAction'
 import { reflectAll } from 'async'
-import { CLASSROOM_QUERY_LOGGEDIN } from '../../gql/Queries'
+import { CLASSROOM_QUERY_LOGGEDIN, USER_QUERY } from '../../gql/Queries'
 
 const BatchCard = ({
 	batch,
@@ -22,7 +22,7 @@ const BatchCard = ({
 	children,
 	client,
 	history,
-	user
+	user,
 }) => {
 	const [isMember, setIsMember] = React.useState(false)
 	if (user !== null) {

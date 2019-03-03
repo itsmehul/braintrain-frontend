@@ -62,9 +62,6 @@ class CustomImageInput extends Component {
     return comp;
   }
 
-  componentDidMount() {
-    console.log(this.fileUpload.current);
-  }
 
   render() {
     const { errorMessage, title, classes } = this.props;

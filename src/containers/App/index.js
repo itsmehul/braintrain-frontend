@@ -14,7 +14,7 @@ import * as ROUTES from '../../constants/routes'
 import { withAuthentication } from '../../components/Session'
 import ClassroomPage from '../Classroom'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
-import { Profile } from '../ProfileDetails'
+import Profile from '../ProfileDetails'
 import ClassroomDetails from '../Classroom/ClassroomDetails'
 import { connect } from 'react-redux'
 import { ReduxSnackbar } from '../../components/Snackbar/ReduxSnackbar'
@@ -24,6 +24,7 @@ import {compose} from 'recompose'
 import { setUserData } from '../../actions'
 import {withApollo} from 'react-apollo'
 import PaymentFailed from '../Payment';
+import { USER_QUERY } from '../../gql/Queries';
 const mapStateToProps = state => {
 	return {
 		snackState: state.myreducer.snackState,
@@ -38,37 +39,10 @@ const mapDispatchToProps = dispatch => {
 class App extends React.Component {
 	componentDidMount = async () => {
 		const user = await this.props.client.query({
-			query: gql`
-				{
-					myprofile {
-						id
-						createdAt
-						name
-						role
-						profession
-						description
-						dpUrl
-						email
-						teacherIn {
-							name
-							batches{
-								id
-							}
-						}
-						studentIn {
-							name
-							batches{
-								id
-							}
-						}
-					}
-				}
-			`
+			query:USER_QUERY,
 		})
-    this.props.setUserData(user.data.myprofile)
-    console.log(this.props.user)
+		this.props.setUserData(user.data.myprofile)
 	}
-
 	render() {
 		const { snackState } = this.props
 		return (
