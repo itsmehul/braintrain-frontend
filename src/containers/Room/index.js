@@ -165,13 +165,15 @@ const StudyRoom = ({userData,match}) => {
 
               <div className="mainContentLayout">
                 <div className="videoLayout">
-                  <div className="videoScreen">
+                  {/* <div className="videoScreen"> */}
+                  <StyledVideoContainer>
                     <GridLayout
                       className='videogrid'
                       items={[...localVideos, ...remoteVideos]}
                       renderCell={(item) => (<Video media={item} />)}
                     />
-                  </div>
+                    </StyledVideoContainer>
+                  {/* </div> */}
                 </div>
 
                 <div className="chatLayout">

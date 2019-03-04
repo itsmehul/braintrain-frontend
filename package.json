@@ -11,7 +11,7 @@
     "apollo-link-context": "^1.0.14",
     "axios": "^0.18.0",
     "emotion": "^9.0.2",
-    "firebase": "^5.8.1",
+    "firebase": "^5.8.5",
     "formik": "^1.5.0",
     "formik-material-ui": "0.0.16",
     "graphql": "^14.1.1",
