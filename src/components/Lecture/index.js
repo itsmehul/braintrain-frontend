@@ -1,7 +1,7 @@
 import React from 'react'
 import './index.scss'
 import LectureAction from '../FloatingActionButton/LectureAction'
-import { getDaysLeft, formatDate } from '../../utils/time'
+import { getDaysLeft, formatDate, convertDateToGMT } from '../../utils/time'
 import Group from '@material-ui/icons/Group'
 import { Button } from '@material-ui/core'
 import * as ROUTES from '../../constants/routes'
@@ -47,11 +47,11 @@ const LectureCard = ({ lecture, myclass, batchId, client, history, match }) => {
 					<Group fontSize="small" />
 				</p>
 				{(CAN_JOIN) ? (
-					<Button onClick={joinClass} className="days_left" variant="outlined">
+					<Button onClick={joinClass} className="days_left" variant="outlined" >
 						JOIN
 					</Button>
 				) : (
-					<p className="days_left">{(DAYS_LEFT!==0)?`In ${DAYS_LEFT} days`:`In ${Math.abs(liveAt.getHours()-date.getHours())} hours`}</p>
+					<p className="days_left">{(DAYS_LEFT!==0)?`In ${DAYS_LEFT} days`:`In ${(Math.abs(liveAt - date) / 36e5).toFixed(0)} hours`}</p>
 				)}
 			</div>
 		</div>

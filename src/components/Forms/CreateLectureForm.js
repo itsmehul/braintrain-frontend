@@ -17,6 +17,7 @@ import {
 	CREATE_LECTURE_MUTATION
 } from '../../gql/Mutations'
 import { CLASSROOM_QUERY_LOGGEDIN } from '../../gql/Queries';
+import { convertDateToGMT, convertDateToISO } from '../../utils/time';
 const mapDispatchToProps = dispatch => {
 	return {
 		setGqlIds: id => dispatch(setGqlIds(id)),
@@ -122,7 +123,11 @@ export default compose(
 			values,
 			{ resetForm, setErrors, setSubmitting, setStatus, props }
 		) => {
-			const { name, description, liveAt, endAt } = values
+			const { name, description } = values
+			let {liveAt, endAt} = values
+			liveAt = convertDateToISO(liveAt)
+			endAt = convertDateToISO(endAt)
+			values = {...values, liveAt, endAt}
 			const { setSnackState, gqlIds, edit } = props
 			const batchId = props.batchId ? props.batchId : gqlIds
 			const classroomId = props.classroomId ? props.classroomId : gqlIds

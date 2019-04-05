@@ -13,9 +13,9 @@ import { withApollo } from 'react-apollo'
 import { compose } from 'recompose'
 import { withRouter } from 'react-router-dom'
 import * as ROUTES from '../../constants/routes'
-import { Button } from '@material-ui/core';
+import { Button } from '@material-ui/core'
 import './Styles.scss'
-import { CLASSROOM_QUERY_LOGGEDIN } from '../../gql/Queries';
+import { CLASSROOM_QUERY_LOGGEDIN } from '../../gql/Queries'
 
 const mapDispatchToProps = dispatch => {
 	return {
@@ -37,32 +37,32 @@ const styles = theme => ({
 function LectureActions(props) {
 	const [openLecture, setOpenLecture] = React.useState(false)
 
-	const deleteLecture = () => {
-		props.client
-			.mutate({
+	const deleteLecture = async () => {
+		try {
+			await props.client.mutate({
 				mutation: DELETE_LECTURE_MUTATION,
 				variables: {
 					lectureId: props.lectureId
 				},
-				refetchQueries: [{
-					query: CLASSROOM_QUERY_LOGGEDIN,
-					variables: { id: props.classroomId},
-				  }],
+				refetchQueries: [
+					{
+						query: CLASSROOM_QUERY_LOGGEDIN,
+						variables: { id: props.classroomId }
+					}
+				]
 			})
-			.then(response => {
-				setSnackState({
-					message: 'Successfully deleted a lecture!',
-					variant: 'success',
-					open: true
-				})
+			setSnackState({
+				message: 'Successfully deleted a lecture!',
+				variant: 'success',
+				open: true
 			})
-			.catch(error => {
-				setSnackState({
-					message: error.message,
-					variant: 'error',
-					open: true
-				})
+		} catch (error) {
+			setSnackState({
+				message: error.message,
+				variant: 'error',
+				open: true
 			})
+		}
 	}
 	const { classes } = props
 	if (props.create)
@@ -90,8 +90,7 @@ function LectureActions(props) {
 			</React.Fragment>
 		)
 	return (
-		<div
-			className="floatContainer">
+		<div className="floatContainer">
 			<Fab
 				onClick={() => {
 					setOpenLecture(true)
@@ -110,7 +109,11 @@ function LectureActions(props) {
 			</Fab>
 			{openLecture && (
 				<SimpleDialog close={() => setOpenLecture(false)}>
-					<CreateLectureForm lectureId={props.lectureId} edit={true} dataToEdit={props.dataToEdit}/>
+					<CreateLectureForm
+						lectureId={props.lectureId}
+						edit={true}
+						dataToEdit={props.dataToEdit}
+					/>
 				</SimpleDialog>
 			)}
 		</div>

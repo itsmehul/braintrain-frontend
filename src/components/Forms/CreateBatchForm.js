@@ -14,6 +14,7 @@ import { setGqlIds, setSnackState, setDialog } from '../../actions'
 import { CREATE_BATCH_MUTATION, EDIT_BATCH_MUTATION } from '../../gql/Mutations'
 import { CLASSROOM_QUERY_LOGGEDIN } from '../../gql/Queries'
 import gql from 'graphql-tag'
+import { convertDateToISO } from '../../utils/time';
 
 const mapDispatchToProps = dispatch => {
 	return {
@@ -123,6 +124,10 @@ export default compose(
 			const classroomId = props.classroomId
 				? props.classroomId
 				: gqlIds.classroomId
+			
+			let { startsFrom } = values
+			startsFrom = convertDateToISO(startsFrom)
+			values = {...values, startsFrom}
 			const valuesToEdit = Object.entries(values)
 				.filter(val => val[1] !== '')
 				.reduce((accum, [k, v]) => {

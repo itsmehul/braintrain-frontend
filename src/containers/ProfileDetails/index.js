@@ -36,7 +36,7 @@ const Profile = props => {
 								<AvatarCard user={user} />
 								{user.role === 'TEACHER' && (
 									<React.Fragment>
-										<Button onClick={() => props.setDialog({ open: true })}>
+										<Button onClick={() => props.setDialog({ open: true })} style={{display:'block', margin:'auto'}}>
 											Create Classroom
 										</Button>
 										<SimpleDialog>

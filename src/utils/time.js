@@ -13,3 +13,11 @@ var month = ["January", "February", "March", "April", "May", "June",
 var str = month + ' ' + mydate.getFullYear();
 return str
 }
+
+export function convertDateToGMT(d){
+	return new Date(d.valueOf() + d.getTimezoneOffset() * 60000)
+}
+
+export function convertDateToISO(d){
+    return new Date(d).toISOString()
+}
